@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.support.v4.net.ConnectivityManagerCompat;
 
 import java.net.Inet4Address;
 import java.net.InetAddress;
@@ -201,8 +200,9 @@ public class NetworkConnectivity {
             @Override
             public void onReceive(Context context, Intent intent) {
                 if (intent.getAction().equals(ConnectivityManager.CONNECTIVITY_ACTION)) {
-                    refresh(networkInfo = ConnectivityManagerCompat
-                            .getNetworkInfoFromBroadcast(cm, intent));
+                    final NetworkInfo info = intent.getParcelableExtra(ConnectivityManager.EXTRA_NETWORK_INFO);
+                    networkInfo = cm.getNetworkInfo(info.getType());
+                    refresh(networkInfo);
                 }
             }
         };
