@@ -164,11 +164,6 @@ public class PhotoUtils {
     /**
      * 选择图库照片
      * 
-     * @param ax
-     * @param ay
-     * @param x
-     * @param y
-     * @param target
      */
     public void pickImage(final int x, final int y, String... tag) {
 	pickImage(x, y, x, y, tag);
@@ -196,8 +191,7 @@ public class PhotoUtils {
 
     /**
      * 打开相机拍照片
-     * 
-     * @param mImageUri
+     *
      * @return
      */
     public File takePhoto(String... tag) {
