@@ -10,7 +10,7 @@
     </parent>
 
     <artifactId>utils</artifactId>
-    <packaging>apklib</packaging>
+    <packaging>jar</packaging>
     <name>Utils</name>
 
     <dependencies>

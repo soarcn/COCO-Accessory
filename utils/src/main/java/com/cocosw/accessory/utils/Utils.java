@@ -32,7 +32,6 @@ import java.util.regex.Pattern;
 
 public class Utils {
 
-	public static boolean debugFlag = BuildConfig.DEBUG;
 
 	public static String getImagePathFromUri(final Context context,
 			final Uri uri) {
@@ -126,120 +125,6 @@ public class Utils {
 	public static Uri getContactUri(final long contactId) {
 		return ContentUris.withAppendedId(
 				ContactsContract.Contacts.CONTENT_URI, contactId);
-	}
-
-	/**
-	 * 打印log
-	 * 
-	 * @param obj
-	 */
-	public static void dout(final Object obj) {
-		if (Utils.debugFlag) {
-			// Views.showToast(obj.toString());
-			if (obj != null) {
-				Log.d("[dout]", "obj>>>>>>>>>>>>>" + obj.getClass().getName()
-						+ ">>" + obj.toString());
-			} else {
-				Log.d("[dout]", "obj>>>>>>>>>>>>>NULL");
-			}
-		}
-	}
-
-	public static void d(final Object... obj) {
-		for (final Object object : obj) {
-			Utils.dout(object);
-		}
-	}
-
-	public static void dout(final int obj) {
-		if (Utils.debugFlag) {
-			Log.d("[dout]", "int>>>>>>>>>>>>>" + obj);
-		}
-	}
-
-	public static void dout(final String str) {
-		if (Utils.debugFlag) {
-			// Views.showToast(str);
-			Log.d("[dout]", "str>>>>>>>>>>>>>" + str);
-		}
-	}
-
-	public static void dout(final Cursor str) {
-		if (Utils.debugFlag) {
-			Log.d("[dout]", Utils.cur2Str(str));
-		}
-	}
-
-	public static void doutCursor(final Cursor cursor) {
-		final StringBuilder retval = new StringBuilder();
-
-		retval.append("|");
-		final int numcolumns = cursor.getColumnCount();
-		for (int column = 0; column < numcolumns; column++) {
-			final String columnName = cursor.getColumnName(column);
-			retval.append(String.format("%-20s |",
-					columnName.substring(0, Math.min(20, columnName.length()))));
-		}
-		retval.append("\n|");
-		for (int column = 0; column < numcolumns; column++) {
-			for (int i = 0; i < 21; i++) {
-				retval.append("-");
-			}
-			retval.append("+");
-		}
-		retval.append("\n|");
-
-		while (cursor.moveToNext()) {
-			for (int column = 0; column < numcolumns; column++) {
-				final String columnValue = cursor.getString(column);
-				retval.append(columnValue);
-			}
-			retval.append("\n");
-
-		}
-		if (Utils.debugFlag) {
-			Log.d("[dout]", retval.toString());
-		}
-	}
-
-	public static void dout(final String str, final String str2) {
-		if (Utils.debugFlag) {
-			// Views.showToast(str + " " + str2);
-			Log.d("[dout]", "str>>>>>>>>>>>>>" + str + " " + str2);
-		}
-	}
-
-	/**
-	 * 把游标内容显示出来
-	 * 
-	 * @param cur
-	 * @return
-	 */
-	public static String cur2Str(final Cursor cur) {
-		final StringBuffer buf = new StringBuffer();
-		final String[] col = cur.getColumnNames();
-		for (int i = 0; i < col.length; i++) {
-			final String str = col[i];
-			try {
-				buf.append("; [" + str + "]:").append(cur.getString(i));
-			} catch (final Exception e) {
-
-			}
-
-		}
-		return buf.toString();
-	}
-
-	public static void dout(final String[] str) {
-		if (Utils.debugFlag) {
-			for (int i = 0; i < str.length; i++) {
-				Log.d("[dout]", "str[" + i + "]>>>>>>>>>>>>>" + str[i]);
-			}
-		}
-	}
-
-	public static void dout(final Throwable t) {
-		Utils.dout(Log.getStackTraceString(t));
 	}
 
 	/**
@@ -371,33 +256,6 @@ public class Utils {
 
 	}
 
-	/**
-	 * 从消息中获取全部提到的人，将它们按先后顺序放入一个列表
-	 * 
-	 * @param msg
-	 *            消息文本
-	 * @return 消息中@的人的列表，按顺序存放
-	 */
-	public static List<String> getMentions(final String msg) {
-		final ArrayList<String> mentionList = new ArrayList<String>();
-
-		final Pattern p = Pattern.compile("@(.*?)\\s");
-		final int MAX_NAME_LENGTH = 12; // 简化判断，无论中英文最长12个字
-
-		final Matcher m = p.matcher(msg);
-		while (m.find()) {
-			final String mention = m.group(1);
-
-			// 过长的名字就忽略（不是合法名字） +1是为了补上“@”所占的长度
-			if (mention.length() <= MAX_NAME_LENGTH + 1) {
-				// 避免重复名字
-				if (!mentionList.contains(mention)) {
-					mentionList.add(m.group(1));
-				}
-			}
-		}
-		return mentionList;
-	}
 
 	/**
 	 * 合并两个List，不包含重复项
@@ -434,64 +292,6 @@ public class Utils {
 		return null;
 	}
 
-	/**
-	 * 判断是否联网,线程安全
-	 * 
-	 * @param context
-	 * @return
-	 */
-	public static boolean haveInternet(final Context context) {
-		try {
-			final ConnectivityManager manger = (ConnectivityManager) context
-					.getSystemService(Context.CONNECTIVITY_SERVICE);
-
-			final NetworkInfo info = manger.getActiveNetworkInfo();
-			return info != null && info.isConnected();
-		} catch (final Exception e) {
-			return false;
-		}
-	}
-
-	/**
-	 * 在桌面创建一个快捷方式 <uses-permission
-	 * android:name="com.android.launcher.permission.INSTALL_SHORTCUT"/>
-	 * 
-	 * @param act
-	 * @param iconResId
-	 * @param appnameResId
-	 */
-	public static void createShortCut(final Activity act, final Class clz,
-			final int iconResId, final int appnameResId) {
-
-		// com.android.launcher.permission.INSTALL_SHORTCUT
-
-		final Intent shortcutintent = new Intent(
-				"com.android.launcher.action.INSTALL_SHORTCUT");
-		// 不允许重复创建
-		shortcutintent.putExtra("duplicate", false);
-		// 需要现实的名称
-		shortcutintent.putExtra(Intent.EXTRA_SHORTCUT_NAME,
-				act.getString(appnameResId));
-		// 快捷图片
-		final Parcelable icon = Intent.ShortcutIconResource.fromContext(
-				act.getApplicationContext(), iconResId);
-		shortcutintent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, icon);
-		// 点击快捷图片，运行的程序主入口
-		shortcutintent.putExtra(Intent.EXTRA_SHORTCUT_INTENT,
-				new Intent(act.getApplicationContext(), clz));
-		// 发送广播
-		act.sendBroadcast(shortcutintent);
-	}
-
-	public static Intent createTextShareIntent(final String title,
-			final String content) {
-		final Intent shareIntent = new Intent(Intent.ACTION_SEND);
-		shareIntent.setType("text/plain");
-		shareIntent.putExtra(Intent.EXTRA_SUBJECT, title);
-		shareIntent.putExtra(Intent.EXTRA_TEXT, content);// 文本内容
-		return shareIntent;
-
-	}
 
 	/**
 	 * Prior to Android 2.2 (Froyo), {@link HttpURLConnection} had some

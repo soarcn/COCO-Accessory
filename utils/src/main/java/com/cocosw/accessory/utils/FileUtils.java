@@ -7,6 +7,7 @@ import android.os.StatFs;
 
 import java.io.*;
 import java.nio.channels.FileChannel;
+import java.text.DecimalFormat;
 import java.util.HashMap;
 
 public class FileUtils {
@@ -15,8 +16,6 @@ public class FileUtils {
 
 	public static String SD = Environment.getExternalStorageDirectory()
 			.getPath() + "/coco/";
-	public static boolean debug = false;
-	public static boolean log = false;
 
 	private static File phone_cache_dir;
 	private static File sd_cache_dir;
@@ -93,14 +92,6 @@ public class FileUtils {
 			mydir.mkdir();
 			FileUtils.createText(".nomedia");
 		}
-	}
-
-	public static File getAvatarFolder() {
-		final File folder = new File(FileUtils.SD + "avatar");
-		if (!folder.exists()) {
-			folder.mkdir();
-		}
-		return folder;
 	}
 
 	public static void createText(final String path) {
@@ -211,7 +202,6 @@ public class FileUtils {
 					+ obj.getClass().getName());
 			final ObjectInputStream ois = new ObjectInputStream(fis);
 			obj = ois.readObject();
-			Utils.dout(obj);
 			ois.close();
 			return obj;
 		} catch (final Exception e) {
@@ -480,5 +470,16 @@ public class FileUtils {
 			return -1;
 		}
 	}
+
+    public static String size(long size) {
+        if (size / (1024 * 1024) > 0) {
+            float tmpSize = (float) (size) / (float) (1024 * 1024);
+            DecimalFormat df = new DecimalFormat("#.##");
+            return "" + df.format(tmpSize) + "MB";
+        } else if (size / 1024 > 0) {
+            return "" + (size / (1024)) + "KB";
+        } else
+            return "" + size + "B";
+    }
 
 }

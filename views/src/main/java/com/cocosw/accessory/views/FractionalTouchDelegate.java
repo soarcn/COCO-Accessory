@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.cocosw.accessory.utils;
+package com.cocosw.accessory.views;
 
 import android.graphics.Rect;
 import android.graphics.RectF;

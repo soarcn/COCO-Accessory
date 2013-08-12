@@ -96,7 +96,6 @@ public class PhotoUtils {
 	    mImageUri = null;
 	    return null;
 	}
-	Utils.dout(mImageUri);
 	switch (requestCode) {
 	case REQUEST_TAKE_PHOTO:
 	case REQUEST_CROP_IMAGE: {

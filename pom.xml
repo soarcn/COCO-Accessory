@@ -73,7 +73,6 @@
         <module>connectivity</module>
         <module>views</module>
         <module>utils</module>
-        <module>downloadmgr</module>
     </modules>
 
     <build>

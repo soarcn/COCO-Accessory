@@ -80,35 +80,6 @@ public class UIUtils {
 				UIUtils.TIME_FLAGS);
 	}
 
-	public static String getTimeAgo(long time, final Context ctx) {
-		if (time < 1000000000000L) {
-			// if timestamp given in seconds, convert to millis
-			time *= 1000;
-		}
-
-		final long now = UIUtils.getCurrentTime(ctx);
-		if (time > now || time <= 0) {
-			return null;
-		}
-
-		// TODO: localize
-		final long diff = now - time;
-		if (diff < UIUtils.MINUTE_MILLIS) {
-			return "just now";
-		} else if (diff < 2 * UIUtils.MINUTE_MILLIS) {
-			return "a minute ago";
-		} else if (diff < 50 * UIUtils.MINUTE_MILLIS) {
-			return diff / UIUtils.MINUTE_MILLIS + " minutes ago";
-		} else if (diff < 90 * UIUtils.MINUTE_MILLIS) {
-			return "an hour ago";
-		} else if (diff < 24 * UIUtils.HOUR_MILLIS) {
-			return diff / UIUtils.HOUR_MILLIS + " hours ago";
-		} else if (diff < 48 * UIUtils.HOUR_MILLIS) {
-			return "yesterday";
-		} else {
-			return diff / UIUtils.DAY_MILLIS + " days ago";
-		}
-	}
 
 
 	/**
@@ -185,16 +156,6 @@ public class UIUtils {
 
 	private static final long sAppLoadTime = System.currentTimeMillis();
 
-	public static long getCurrentTime(final Context context) {
-		if (BuildConfig.DEBUG) {
-			return context.getSharedPreferences("mock_data",
-					Context.MODE_PRIVATE).getLong("mock_current_time",
-					System.currentTimeMillis())
-					+ System.currentTimeMillis() - UIUtils.sAppLoadTime;
-		} else {
-			return System.currentTimeMillis();
-		}
-	}
 
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	public static void setActivatedCompat(final View view,
