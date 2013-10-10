@@ -22,6 +22,7 @@
  */
 package com.cocosw.accessory.views;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Point;
 import android.os.Build;
@@ -56,7 +57,8 @@ public class PagerContainer extends FrameLayout implements
 		init();
 	}
 
-	private void init() {
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    private void init() {
 		// Disable clipping of children so non-selected pages are visible
 		setClipChildren(false);
 
@@ -81,7 +83,8 @@ public class PagerContainer extends FrameLayout implements
 		return Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO;
 	}
 
-	@Override
+	@TargetApi(Build.VERSION_CODES.GINGERBREAD)
+    @Override
 	protected void onFinishInflate() {
 		try {
 			mPager = (ViewPager) getChildAt(0);

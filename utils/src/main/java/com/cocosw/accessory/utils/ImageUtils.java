@@ -115,6 +115,36 @@ public class ImageUtils {
     }
 
     /**
+     * Изменение размера пропорционально
+     *
+     * @param image Bitmap
+     * @param max_w int
+     * @param max_h int
+     * @return Bitmap
+     */
+    public static Bitmap scale(Bitmap image, int max_w, int max_h) {
+        float width = image.getWidth();
+        float height = image.getHeight();
+        float scale = 1f;
+        if( width > height ) {
+            if( width > max_w ) {
+                scale = max_w / width;
+            }
+        } else {
+            if( height > max_h ) {
+                scale = max_h / height;
+            }
+        }
+        if( scale != 1f ) {
+            int w = (int) (width * scale);
+            int h = (int) (height * scale);
+            return Bitmap.createScaledBitmap(image, w, h, false);
+        } else {
+            return image;
+        }
+    }
+
+    /**
      * get input stream from network by imageurl, you need to close inputStream yourself
      * 
      * @param imageUrl
