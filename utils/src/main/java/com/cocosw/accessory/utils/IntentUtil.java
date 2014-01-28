@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Parcelable;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -138,6 +139,23 @@ public class IntentUtil {
         shareIntent.putExtra(Intent.EXTRA_TEXT, content);// 文本内容
         return shareIntent;
 
+    }
+
+    /**
+     * Launch a App by packageName
+     * @param context
+     * @param packageName
+     * @return
+     */
+
+    public static boolean launchApp(Context context, String packageName) {
+        Intent intent = context.getPackageManager().getLaunchIntentForPackage(packageName);
+        if (intent != null) {
+            context.startActivity(intent);
+            return true;
+        } else {
+            return false;
+        }
     }
 
 }
