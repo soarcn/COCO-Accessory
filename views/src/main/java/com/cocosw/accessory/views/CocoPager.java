@@ -12,7 +12,9 @@ import static android.os.Build.VERSION.SDK_INT;
 import static android.os.Build.VERSION_CODES.ICE_CREAM_SANDWICH;
 
 /**
- * 在原本基础上增加了临时禁止swipe的功能
+ * Add 2 addtional function to ViewPager
+ * 1 enable/disable swipe
+ * 2 set scrollview as root view, viewpager can place into a scroll view
  *
  * @author kaliao
  */
