@@ -15,12 +15,12 @@ public class NumberUtils {
      * @return
      */
     public static String getBeautyNum(long num) {
-        if (num<1000)
+        if (num < 1000)
             return String.valueOf(num);
-        if (num<99999)
-            return (num/1000)+"+千";
-        if (num<9999999)
-            return (num/10000)+"+万";
-        return (num/10000000) +"+千万";
-     }
+        if (num < 99999)
+            return (num / 1000) + "+千";
+        if (num < 9999999)
+            return (num / 10000) + "+万";
+        return (num / 10000000) + "+千万";
+    }
 }

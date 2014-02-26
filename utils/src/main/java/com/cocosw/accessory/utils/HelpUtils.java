@@ -26,31 +26,31 @@ import android.preference.PreferenceManager;
  */
 public class HelpUtils {
 
-	public static boolean hasSeenTutorial(final Context context, final String id) {
-		final SharedPreferences sp = PreferenceManager
-				.getDefaultSharedPreferences(context);
-		return sp.getBoolean("seen_tutorial_" + id, false);
-	}
+    public static boolean hasSeenTutorial(final Context context, final String id) {
+        final SharedPreferences sp = PreferenceManager
+                .getDefaultSharedPreferences(context);
+        return sp.getBoolean("seen_tutorial_" + id, false);
+    }
 
-	private static void setSeenTutorial(final Context context, final String id) {
-		// noinspection unchecked
-		new AsyncTask<Void, Void, Void>() {
-			@Override
-			protected Void doInBackground(final Void... voids) {
-				final SharedPreferences sp = PreferenceManager
-						.getDefaultSharedPreferences(context);
-				sp.edit().putBoolean("seen_tutorial_" + id, true).commit();
-				return null;
-			}
-		}.execute();
-	}
+    private static void setSeenTutorial(final Context context, final String id) {
+        // noinspection unchecked
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(final Void... voids) {
+                final SharedPreferences sp = PreferenceManager
+                        .getDefaultSharedPreferences(context);
+                sp.edit().putBoolean("seen_tutorial_" + id, true).commit();
+                return null;
+            }
+        }.execute();
+    }
 
-	public static boolean needShowHelp(final Context context, final String id) {
-		final boolean need = !HelpUtils.hasSeenTutorial(context, id);
-		if (need) {
-			HelpUtils.setSeenTutorial(context, id);
-		}
-		return need;
-	}
+    public static boolean needShowHelp(final Context context, final String id) {
+        final boolean need = !HelpUtils.hasSeenTutorial(context, id);
+        if (need) {
+            HelpUtils.setSeenTutorial(context, id);
+        }
+        return need;
+    }
 
 }

@@ -4,20 +4,20 @@ import java.util.Random;
 
 /**
  * Random Utils
- * 
+ *
  * @author Trinea 2012-5-12
  */
 public class RandomUtils {
 
     public static final String NUMBERS_AND_LETTERS = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    public static final String NUMBERS             = "0123456789";
-    public static final String LETTERS             = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    public static final String CAPITAL_LETTERS     = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    public static final String LOWER_CASE_LETTERS  = "abcdefghijklmnopqrstuvwxyz";
+    public static final String NUMBERS = "0123456789";
+    public static final String LETTERS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    public static final String CAPITAL_LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    public static final String LOWER_CASE_LETTERS = "abcdefghijklmnopqrstuvwxyz";
 
     /**
      * get a fixed-length random string, its a mixture of uppercase, lowercase letters and numbers
-     * 
+     *
      * @param length
      * @return
      * @see {@link RandomUtils#getRandom(String source, int length)}
@@ -28,7 +28,7 @@ public class RandomUtils {
 
     /**
      * get a fixed-length random string, its a mixture of numbers
-     * 
+     *
      * @param length
      * @return
      * @see {@link RandomUtils#getRandom(String source, int length)}
@@ -39,7 +39,7 @@ public class RandomUtils {
 
     /**
      * get a fixed-length random string, its a mixture of uppercase and lowercase letters
-     * 
+     *
      * @param length
      * @return
      * @see {@link RandomUtils#getRandom(String source, int length)}
@@ -50,7 +50,7 @@ public class RandomUtils {
 
     /**
      * get a fixed-length random string, its a mixture of uppercase letters
-     * 
+     *
      * @param length
      * @return
      * @see {@link RandomUtils#getRandom(String source, int length)}
@@ -61,7 +61,7 @@ public class RandomUtils {
 
     /**
      * get a fixed-length random string, its a mixture of lowercase letters
-     * 
+     *
      * @param length
      * @return
      * @see {@link RandomUtils#getRandom(String source, int length)}
@@ -72,7 +72,7 @@ public class RandomUtils {
 
     /**
      * get a fixed-length random string, its a mixture of chars in source
-     * 
+     *
      * @param source
      * @param length
      * @return <ul>
@@ -86,7 +86,7 @@ public class RandomUtils {
 
     /**
      * get a fixed-length random string, its a mixture of chars in sourceChar
-     * 
+     *
      * @param sourceChar
      * @param length
      * @return <ul>

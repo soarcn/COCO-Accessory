@@ -1,13 +1,5 @@
 package com.cocosw.accessory.utils;
 
-import java.io.ByteArrayOutputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-
 import android.content.ContentResolver;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -20,6 +12,13 @@ import android.media.ExifInterface;
 import android.provider.BaseColumns;
 import android.provider.MediaStore;
 import android.view.View;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 /**
  * ImageUtils
@@ -43,14 +42,14 @@ import android.view.View;
  * <li>{@link #scaleImageTo(Bitmap, int, int)}</li>
  * <li>{@link #scaleImage(Bitmap, float, float)}</li>
  * </ul>
- * 
+ *
  * @author Trinea 2012-6-27
  */
 public class ImageUtils {
 
     /**
      * convert Bitmap to byte array
-     * 
+     *
      * @param b
      * @return
      */
@@ -66,7 +65,7 @@ public class ImageUtils {
 
     /**
      * convert byte array to Bitmap
-     * 
+     *
      * @param b
      * @return
      */
@@ -76,17 +75,17 @@ public class ImageUtils {
 
     /**
      * convert Drawable to Bitmap
-     * 
+     *
      * @param d
      * @return
      */
     public static Bitmap drawableToBitmap(Drawable d) {
-        return d == null ? null : ((BitmapDrawable)d).getBitmap();
+        return d == null ? null : ((BitmapDrawable) d).getBitmap();
     }
 
     /**
      * convert Bitmap to Drawable
-     * 
+     *
      * @param b
      * @return
      */
@@ -96,7 +95,7 @@ public class ImageUtils {
 
     /**
      * convert Drawable to byte array
-     * 
+     *
      * @param d
      * @return
      */
@@ -106,7 +105,7 @@ public class ImageUtils {
 
     /**
      * convert byte array to Drawable
-     * 
+     *
      * @param b
      * @return
      */
@@ -126,16 +125,16 @@ public class ImageUtils {
         float width = image.getWidth();
         float height = image.getHeight();
         float scale = 1f;
-        if( width > height ) {
-            if( width > max_w ) {
+        if (width > height) {
+            if (width > max_w) {
                 scale = max_w / width;
             }
         } else {
-            if( height > max_h ) {
+            if (height > max_h) {
                 scale = max_h / height;
             }
         }
-        if( scale != 1f ) {
+        if (scale != 1f) {
             int w = (int) (width * scale);
             int h = (int) (height * scale);
             return Bitmap.createScaledBitmap(image, w, h, false);
@@ -146,7 +145,7 @@ public class ImageUtils {
 
     /**
      * get input stream from network by imageurl, you need to close inputStream yourself
-     * 
+     *
      * @param imageUrl
      * @param readTimeOut read time out, if less than 0, not set
      * @return
@@ -157,7 +156,7 @@ public class ImageUtils {
         InputStream stream = null;
         try {
             URL url = new URL(imageUrl);
-            HttpURLConnection con = (HttpURLConnection)url.openConnection();
+            HttpURLConnection con = (HttpURLConnection) url.openConnection();
             if (readTimeOut > 0) {
                 con.setReadTimeout(readTimeOut);
             }
@@ -174,7 +173,7 @@ public class ImageUtils {
 
     /**
      * get drawable by imageUrl
-     * 
+     *
      * @param imageUrl
      * @param readTimeOut read time out, if less than 0, not set
      * @return
@@ -188,7 +187,7 @@ public class ImageUtils {
 
     /**
      * get Bitmap by imageUrl
-     * 
+     *
      * @param imageUrl
      * @return
      */
@@ -201,21 +200,21 @@ public class ImageUtils {
 
     /**
      * scale image
-     * 
+     *
      * @param org
      * @param newWidth
      * @param newHeight
      * @return
      */
     public static Bitmap scaleImageTo(Bitmap org, int newWidth, int newHeight) {
-        return scaleImage(org, (float)newWidth / org.getWidth(), (float)newHeight / org.getHeight());
+        return scaleImage(org, (float) newWidth / org.getWidth(), (float) newHeight / org.getHeight());
     }
 
     /**
      * scale image
-     * 
+     *
      * @param org
-     * @param scaleWidth sacle of width
+     * @param scaleWidth  sacle of width
      * @param scaleHeight scale of height
      * @return
      */
@@ -231,7 +230,7 @@ public class ImageUtils {
 
     /**
      * close inputStream
-     * 
+     *
      * @param s
      */
     private static void closeInputStream(InputStream s) {
@@ -264,10 +263,10 @@ public class ImageUtils {
                                       final long id) {
         final Cursor cursor = contentResolver.query(
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                new String[] { MediaStore.MediaColumns.DATA }, // Which columns
+                new String[]{MediaStore.MediaColumns.DATA}, // Which columns
                 // to return
                 BaseColumns._ID + "=?", // Which rows to return
-                new String[] { String.valueOf(id) }, // Selection arguments
+                new String[]{String.valueOf(id)}, // Selection arguments
                 null);// order
 
         if (cursor != null && cursor.getCount() > 0) {
