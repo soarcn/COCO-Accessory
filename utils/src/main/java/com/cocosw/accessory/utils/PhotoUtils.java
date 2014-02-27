@@ -104,7 +104,7 @@ public class PhotoUtils {
             case REQUEST_PICK_IMAGE: {
                 final Uri uri = intent.getData();
                 final File file = uri == null ? null : new File(
-                        Utils.getImagePathFromUri(context, uri));
+                        ImageUtils.getImagePathFromUri(context, uri));
                 if (file != null && file.exists())
                     return file;
                 else {

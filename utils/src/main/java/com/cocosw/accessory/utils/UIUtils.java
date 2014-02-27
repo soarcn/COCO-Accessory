@@ -17,14 +17,15 @@
 package com.cocosw.accessory.utils;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.Configuration;
-import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Build.VERSION;
@@ -75,8 +76,6 @@ public class UIUtils {
             Locale.getDefault());
 
     private static StyleSpan sBoldSpan = new StyleSpan(Typeface.BOLD);
-    private static Bitmap mebg;
-
 
     public static String formatBlockTimeString(final long blockStart,
                                                final long blockEnd, final Context context) {
@@ -174,6 +173,11 @@ public class UIUtils {
                 "com.google.android.tv");
     }
 
+
+    public static boolean hasKitKat() {
+        return isApiHighEnough(VERSION_CODES.KITKAT);
+    }
+
     public static boolean hasFroyo() {
         // Can use static final constants like FROYO, declared in later versions
         // of the OS since they are inlined at compile time. This is guaranteed
@@ -238,7 +242,7 @@ public class UIUtils {
         return false;
     }
 
-    static boolean isApiHighEnough(final int requiredApiLevel) {
+    public static boolean isApiHighEnough(final int requiredApiLevel) {
         return VERSION.SDK_INT >= requiredApiLevel;
     }
 
@@ -253,5 +257,25 @@ public class UIUtils {
             return canvas.isHardwareAccelerated();
         }
 
+    }
+
+    @TargetApi(VERSION_CODES.HONEYCOMB_MR2)
+    public static int getScreenWidth(final Activity act) {
+        if (isApiHighEnough(13)) {
+            Point point = new Point();
+            act.getWindowManager().getDefaultDisplay().getSize(point);
+            return point.x;
+        } else
+            return act.getWindowManager().getDefaultDisplay().getWidth();
+    }
+
+    @TargetApi(VERSION_CODES.HONEYCOMB_MR2)
+    public static int getScreenHight(final Activity act) {
+        if (isApiHighEnough(13)) {
+            Point point = new Point();
+            act.getWindowManager().getDefaultDisplay().getSize(point);
+            return point.y;
+        } else
+            return act.getWindowManager().getDefaultDisplay().getHeight();
     }
 }
