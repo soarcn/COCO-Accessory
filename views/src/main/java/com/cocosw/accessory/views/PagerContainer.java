@@ -79,9 +79,6 @@ public class PagerContainer extends FrameLayout implements
 		return Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD;
 	}
 
-	public static boolean isFroyoOrHigher() {
-		return Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO;
-	}
 
 	@TargetApi(Build.VERSION_CODES.GINGERBREAD)
     @Override

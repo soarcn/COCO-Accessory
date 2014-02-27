@@ -104,6 +104,18 @@ public class ColorAnalyser {
 		bitmap.recycle();
 		resized.recycle();
 		return colorsMap.get(colorsScore.get(colorsScore.size() - 1));
-
 	}
+
+    private static final int BRIGHTNESS_THRESHOLD = 130;
+
+    /**
+     * Calculate whether a color is light or dark, based on a commonly known
+     * brightness formula.
+     *
+     * @see {@literal http://en.wikipedia.org/wiki/HSV_color_space%23Lightness}
+     */
+    public static boolean isColorDark(final int color) {
+        return (30 * Color.red(color) + 59 * Color.green(color) + 11 * Color
+                .blue(color)) / 100 <= BRIGHTNESS_THRESHOLD;
+    }
 }

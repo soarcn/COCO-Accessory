@@ -57,7 +57,6 @@ public class UIUtils {
     private static final int SECOND_MILLIS = 1000;
     private static final int MINUTE_MILLIS = 60 * UIUtils.SECOND_MILLIS;
     private static final int HOUR_MILLIS = 60 * UIUtils.MINUTE_MILLIS;
-    private static final int DAY_MILLIS = 24 * UIUtils.HOUR_MILLIS;
 
     /**
      * Flags used with {@link DateUtils#formatDateRange}.
@@ -69,11 +68,7 @@ public class UIUtils {
      * {@link StringBuilder} used for formatting time block.
      */
     private static StringBuilder sBuilder = new StringBuilder(50);
-    /**
-     * {@link Formatter} used for formatting time block.
-     */
-    private static Formatter sFormatter = new Formatter(UIUtils.sBuilder,
-            Locale.getDefault());
+
 
     private static StyleSpan sBoldSpan = new StyleSpan(Typeface.BOLD);
 
@@ -143,21 +138,6 @@ public class UIUtils {
             }
         }
     }
-
-    private static final int BRIGHTNESS_THRESHOLD = 130;
-
-    /**
-     * Calculate whether a color is light or dark, based on a commonly known
-     * brightness formula.
-     *
-     * @see {@literal http://en.wikipedia.org/wiki/HSV_color_space%23Lightness}
-     */
-    public static boolean isColorDark(final int color) {
-        return (30 * Color.red(color) + 59 * Color.green(color) + 11 * Color
-                .blue(color)) / 100 <= UIUtils.BRIGHTNESS_THRESHOLD;
-    }
-
-    private static final long sAppLoadTime = System.currentTimeMillis();
 
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
