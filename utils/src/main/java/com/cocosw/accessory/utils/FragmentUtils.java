@@ -42,4 +42,12 @@ public class FragmentUtils {
         FragmentUtils.replaceFragment(act, id,
                 Fragment.instantiate(act, clz.getName()));
     }
+
+    public static <T extends Fragment> T findFragment(FragmentActivity activity, int resId) {
+        return (T) activity.getSupportFragmentManager().findFragmentById(resId);
+    }
+
+    public static <T extends Fragment> T findFragment(FragmentActivity activity, String tag) {
+        return (T) activity.getSupportFragmentManager().findFragmentByTag(tag);
+    }
 }

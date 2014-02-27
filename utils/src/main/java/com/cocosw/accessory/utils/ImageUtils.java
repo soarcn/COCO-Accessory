@@ -1,6 +1,7 @@
 package com.cocosw.accessory.utils;
 
 import android.content.ContentResolver;
+import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -9,11 +10,13 @@ import android.graphics.Shader;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.ExifInterface;
+import android.net.Uri;
 import android.provider.BaseColumns;
 import android.provider.MediaStore;
 import android.view.View;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -141,6 +144,44 @@ public class ImageUtils {
         } else {
             return image;
         }
+    }
+
+    public static String getImagePathFromUri(final Context context,
+                                             final Uri uri) {
+        if (context == null || uri == null) {
+            return null;
+        }
+
+        final String media_uri_start = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+                .toString();
+
+        if (uri.toString().startsWith(media_uri_start)) {
+
+            final String[] proj = {MediaStore.MediaColumns.DATA};
+            final Cursor cursor = context.getContentResolver().query(uri, proj,
+                    null, null, null);
+
+            if (cursor == null || cursor.getCount() <= 0) {
+                return null;
+            }
+
+            final int column_index = cursor
+                    .getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
+
+            cursor.moveToFirst();
+
+            final String path = cursor.getString(column_index);
+            cursor.close();
+            return path;
+        } else {
+            final String path = uri.getPath();
+            if (path != null) {
+                if (new File(path).exists()) {
+                    return path;
+                }
+            }
+        }
+        return null;
     }
 
     /**

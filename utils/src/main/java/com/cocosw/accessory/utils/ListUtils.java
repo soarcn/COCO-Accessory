@@ -10,6 +10,24 @@ import java.util.List;
  */
 public class ListUtils {
 
+
+    /**
+     * 合并两个List，不包含重复项
+     *
+     * @param a
+     * @param b
+     * @return
+     */
+    public static List mergeList(final List a, final List b) {
+        for (final Object o : a) {
+            if (!b.contains(o)) {
+                b.add(o);
+            }
+        }
+        return b;
+    }
+
+
     /**
      * default join separator *
      */

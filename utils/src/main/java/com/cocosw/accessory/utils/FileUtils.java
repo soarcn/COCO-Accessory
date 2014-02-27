@@ -66,6 +66,33 @@ public class FileUtils {
         }
     }
 
+
+    static public String formatSize(long size) {
+        String suffix = null;
+
+        if (size >= 1024) {
+            suffix = "KiB";
+            size /= 1024;
+            if (size >= 1024) {
+                suffix = "MiB";
+                size /= 1024;
+            }
+        }
+
+        final StringBuilder resultBuffer = new StringBuilder(
+                Long.toString(size));
+        int commaOffset = resultBuffer.length() - 3;
+        while (commaOffset > 0) {
+            resultBuffer.insert(commaOffset, ',');
+            commaOffset -= 3;
+        }
+
+        if (suffix != null) {
+            resultBuffer.append(suffix);
+        }
+        return resultBuffer.toString();
+    }
+
     /**
      * 根据现在的sd卡状态,自动获得cache的目录
      *

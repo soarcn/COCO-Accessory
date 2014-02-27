@@ -2,19 +2,10 @@ package com.cocosw.accessory.utils;
 
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningAppProcessInfo;
-import android.content.ContentUris;
 import android.content.Context;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Resources;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
-import android.net.Uri;
-import android.provider.ContactsContract;
-import android.provider.MediaStore;
-import android.provider.MediaStore.MediaColumns;
 import android.util.Log;
 
 import java.io.BufferedReader;
@@ -35,55 +26,10 @@ import java.util.Map;
 
 public class Utils {
 
-
-    public static String getImagePathFromUri(final Context context,
-                                             final Uri uri) {
-        if (context == null || uri == null) {
-            return null;
-        }
-
-        final String media_uri_start = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-                .toString();
-
-        if (uri.toString().startsWith(media_uri_start)) {
-
-            final String[] proj = {MediaColumns.DATA};
-            final Cursor cursor = context.getContentResolver().query(uri, proj,
-                    null, null, null);
-
-            if (cursor == null || cursor.getCount() <= 0) {
-                return null;
-            }
-
-            final int column_index = cursor
-                    .getColumnIndexOrThrow(MediaColumns.DATA);
-
-            cursor.moveToFirst();
-
-            final String path = cursor.getString(column_index);
-            cursor.close();
-            return path;
-        } else {
-            final String path = uri.getPath();
-            if (path != null) {
-                if (new File(path).exists()) {
-                    return path;
-                }
-            }
-        }
-        return null;
-    }
-
-
     public static void printCallStatck() {
         final Throwable ex = new Throwable();
         // StackTraceElement[] stackElements = ex.getStackTrace();
         ex.printStackTrace();
-    }
-
-    public static Uri getContactUri(final long contactId) {
-        return ContentUris.withAppendedId(
-                ContactsContract.Contacts.CONTENT_URI, contactId);
     }
 
 
@@ -118,84 +64,6 @@ public class Utils {
         }
         sql = sql.replace("*", sb.toString());
         return sql;
-    }
-
-    static public String formatSize(long size) {
-        String suffix = null;
-
-        if (size >= 1024) {
-            suffix = "KiB";
-            size /= 1024;
-            if (size >= 1024) {
-                suffix = "MiB";
-                size /= 1024;
-            }
-        }
-
-        final StringBuilder resultBuffer = new StringBuilder(
-                Long.toString(size));
-        int commaOffset = resultBuffer.length() - 3;
-        while (commaOffset > 0) {
-            resultBuffer.insert(commaOffset, ',');
-            commaOffset -= 3;
-        }
-
-        if (suffix != null) {
-            resultBuffer.append(suffix);
-        }
-        return resultBuffer.toString();
-    }
-
-
-    public static int getPackageVersion(final Context context) {
-        try {
-            final PackageInfo pinfo = context
-                    .getApplicationContext()
-                    .getPackageManager()
-                    .getPackageInfo(context.getPackageName(),
-                            PackageManager.GET_CONFIGURATIONS);
-            return pinfo.versionCode;
-        } catch (final NameNotFoundException e) {
-            e.printStackTrace();
-            return 0;
-        }
-
-    }
-
-
-    /**
-     * 合并两个List，不包含重复项
-     *
-     * @param a
-     * @param b
-     * @return
-     */
-    public static List mergeList(final List a, final List b) {
-        for (final Object o : a) {
-            if (!b.contains(o)) {
-                b.add(o);
-            }
-        }
-        return b;
-    }
-
-    /**
-     * 获得程序版本号
-     *
-     * @param context
-     * @return
-     */
-    public static String getVersionName(final Context context) {
-        final PackageInfo pinfo;
-        try {
-            pinfo = context.getPackageManager()
-                    .getPackageInfo(context.getPackageName(),
-                            PackageManager.GET_CONFIGURATIONS);
-            return pinfo.versionName;
-        } catch (final NameNotFoundException e) {
-            e.printStackTrace();
-        }
-        return null;
     }
 
 
@@ -304,7 +172,6 @@ public class Utils {
                 return true;
             }
         } catch (Exception e) {
-            e.printStackTrace();
         }
 
         // second try
@@ -318,7 +185,6 @@ public class Utils {
                 return true;
             }
         } catch (Exception e) {
-            e.printStackTrace();
         }
 
         // third try
@@ -345,7 +211,6 @@ public class Utils {
                 return true;
             }
         } catch (Exception e) {
-            e.printStackTrace();
         }
 
         mHasRootBeenChecked = true;
