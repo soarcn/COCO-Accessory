@@ -24,7 +24,6 @@ public class ParallaxMotion {
     private static ImageView iv;
     private static ViewGroup fl;
     private static String tag = "ParallaxMotion";
-    private float CurrentAlpha = 1f;
     private double CurrentScale = 1.0;
     // default variables
     public static final double DEFAULT_SCALE = 2;
@@ -47,7 +46,6 @@ public class ParallaxMotion {
     private SensorManager mSensorManager;
     private Sensor mSensor;
     private static Context context;
-    private Context Glass_Context;
 
 
     /**
@@ -82,7 +80,6 @@ public class ParallaxMotion {
         context = ctx;
         fl = frame_layout;
         try {
-            Glass_Context = ParallaxMotion.context;
             if (imageview == null) {
                 iv = new ImageView(ctx);
                 addGlassImage(frame_layout);
@@ -148,6 +145,8 @@ public class ParallaxMotion {
         // Log.d(tag, "L: " + r.left + " R: " + r.right + " T: " + r.top +
         // " B: "+ r.bottom);
 
+        if (iv.getDrawable() == null)
+            return;
         double img_height = iv.getDrawable().getIntrinsicHeight() * ParallaxMotion.SCALE;
         double img_width = iv.getDrawable().getIntrinsicWidth() * ParallaxMotion.SCALE;
 
@@ -175,7 +174,7 @@ public class ParallaxMotion {
      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public void setAlpha(float alpha) {
-        CurrentAlpha = alpha;
+        //   CurrentAlpha = alpha;
         iv.setAlpha(alpha);
         iv.setImageMatrix(mMatrix);
         iv.invalidate();
