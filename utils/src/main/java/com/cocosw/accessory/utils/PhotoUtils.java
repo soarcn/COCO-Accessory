@@ -8,6 +8,7 @@ import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 
 import java.io.File;
+import java.util.ArrayList;
 
 /**
  * 和图像资源相关的一些工具类
@@ -24,15 +25,22 @@ public class PhotoUtils {
     private Uri mImageUri;
     private String tag;
     private final Fragment fg;
+    private File temp;
 
     public PhotoUtils(Activity context) {
         this.context = context;
         fg = null;
+        temp =FileUtils.getCacheDir(context);
     }
 
     public PhotoUtils(Fragment fg) {
         context = fg.getActivity();
         this.fg = fg;
+        temp =FileUtils.getCacheDir(context);
+    }
+
+    public void SetTempDir(File dir) {
+        this.temp = dir;
     }
 
     /**
@@ -75,7 +83,7 @@ public class PhotoUtils {
     }
 
     private File getTempFile() {
-        final File file = new File(FileUtils.getCacheDir(context), "tmp_photo_"
+        final File file = new File(temp, "tmp_photo_"
                 + System.currentTimeMillis() + ".jpg");
         mImageUri = Uri.fromFile(file);
         return file;
@@ -204,4 +212,5 @@ public class PhotoUtils {
                           String bg) {
         cropPhoto(mPhotoFile, width, height, width, height, b, tag);
     }
+
 }
