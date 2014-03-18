@@ -4,10 +4,12 @@ import android.content.Context;
 import android.os.Build;
 import android.os.Environment;
 import android.os.StatFs;
+import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -20,6 +22,7 @@ import java.text.DecimalFormat;
 import java.util.HashMap;
 
 public class FileUtils {
+    private static final String TAG = "FileUtils";
     private static String line;
     private static File filename;
 
@@ -514,6 +517,96 @@ public class FileUtils {
             return "" + (size / (1024)) + "KB";
         } else
             return "" + size + "B";
+    }
+
+    /**
+     * Get a string suitable to be used as a file name.<br/>
+     * This will replace characters that cannot be used in a file name (for instance '/' or '='), with the given replacement character, or with nothing if
+     * {@code null} is given.
+     *
+     * @param originalName The original name.
+     * @param replacementChar The replacement character to use or {@code null} to just strip the bad characters.
+     * @return A new string equal to {@code originalName} with the bad characters stripped or replaced.
+     */
+    public static String getValidFileName(String originalName, Character replacementChar) {
+        int len = originalName.length();
+        StringBuilder res = new StringBuilder(len);
+        for (int i = 0; i < len; i++) {
+            char c = originalName.charAt(i);
+            if (c == ' ' || c == '-' || c == '_' || c == '.' || c == ',' || c == '(' || c == ')') {
+                res.append(c);
+            } else if (c == '\u00E9' || c == '\u00E0' || c == '\u00E9' || c == '\u00E7' || c == '\u00F4' || c == '\u00EE') {
+                res.append(c);
+            } else if ('0' <= c && c <= '9') {
+                res.append(c);
+            } else if ('a' <= c && c <= 'z') {
+                res.append(c);
+            } else if ('A' <= c && c <= 'Z') {
+                res.append(c);
+            } else if (replacementChar != null) {
+                res.append(replacementChar.charValue());
+            }
+        }
+        return res.toString();
+    }
+
+    /**
+     * Equivalent of calling {@code getValidFilename(originalName, null)}.
+     */
+    public static String getValidFileName(String originalName) {
+        return getValidFileName(originalName, null);
+    }
+
+    /**
+     * A criteria to delete files if they are older than a given max age.
+     */
+    public class ExpiredFileFilter implements FileFilter {
+        private long mMaxAgeMs;
+
+        public ExpiredFileFilter(long maxAgeMs) {
+            mMaxAgeMs = maxAgeMs;
+        }
+
+        @Override
+        public boolean accept(File file) {
+            return file.lastModified() < System.currentTimeMillis() - mMaxAgeMs;
+        }
+    }
+
+    /**
+     * Recursively delete a file or directory.<br/>
+     * An optional {@link FileFilter} can be given to choose to delete only certain files ({@link FileFilter#accept(File)} returning {@code true} means the file
+     * should be deleted).<br/>
+     * If a filter is given, it will only be used on files, not directories and because of that, directories will not be deleted. If {@code null} is given, then
+     * files <strong>and</strong> directories are deleted.
+     *
+     * @param fileOrDirectory The file or directory to delete.
+     * @param criteria The criteria to use to choose to delete only certain files, or {@code null} to delete all of them.
+     */
+    public static void deleteRecursively(File fileOrDirectory, FileFilter criteria) {
+        if (fileOrDirectory.isDirectory()) {
+            for (File child : fileOrDirectory.listFiles()) {
+                deleteRecursively(child, criteria);
+            }
+            if (criteria == null) {
+                boolean ok = fileOrDirectory.delete();
+                Log.d(TAG, "deleted directory " + fileOrDirectory + (ok ? " ok" : " NOT ok"));
+            }
+        } else {
+            if (criteria == null || criteria.accept(fileOrDirectory)) {
+                boolean ok = fileOrDirectory.delete();
+                Log.d(TAG, "deleted file " + fileOrDirectory + (ok ? " ok" : " NOT ok"));
+            }
+        }
+    }
+
+    /**
+     * Recursively delete a file or directory.
+     *
+     * @param fileOrDirectory The file or directory to delete.
+     */
+    public static void deleteRecursively(File fileOrDirectory) {
+        deleteRecursively(fileOrDirectory, null);
     }
 
 }
