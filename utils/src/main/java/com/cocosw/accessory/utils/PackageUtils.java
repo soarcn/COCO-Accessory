@@ -8,7 +8,9 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.provider.Settings;
+import android.text.TextUtils;
 import android.util.Log;
 
 import java.util.List;
@@ -193,7 +195,7 @@ public class PackageUtils {
      * stack
      */
     public static Boolean isTopActivity(Context context, String packageName) {
-        if (context == null || StringUtils.isEmpty(packageName)) {
+        if (context == null || TextUtils.isEmpty(packageName)) {
             return null;
         }
 
@@ -207,6 +209,22 @@ public class PackageUtils {
         } catch (Exception e) {
             e.printStackTrace();
             return false;
+        }
+    }
+
+    /**
+     * read metadata from Manifest
+     * @param key
+     * @param context
+     * @return
+     */
+    public static String readMetaData(String key, Context context) {
+        try {
+            ApplicationInfo appi =  context.getPackageManager().getApplicationInfo(context.getPackageName(), PackageManager.GET_META_DATA);
+            Bundle bundle = appi.metaData;
+            return bundle.getString(key);
+        } catch (PackageManager.NameNotFoundException e) {
+            return null;
         }
     }
 }

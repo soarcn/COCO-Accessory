@@ -55,38 +55,6 @@ public class StringUtils {
     }
 
     /**
-     * is null or its length is 0
-     * <p/>
-     * <pre>
-     * isEmpty(null) = true;
-     * isEmpty(&quot;&quot;) = true;
-     * isEmpty(&quot;  &quot;) = false;
-     * </pre>
-     *
-     * @param str
-     * @return if string is null or its size is 0, return true, else return false.
-     */
-    public static boolean isEmpty(String str) {
-        return (str == null || str.length() == 0);
-    }
-
-    /**
-     * null string to empty string
-     * <p/>
-     * <pre>
-     * nullStrToEmpty(null) = &quot;&quot;;
-     * nullStrToEmpty(&quot;&quot;) = &quot;&quot;;
-     * nullStrToEmpty(&quot;aa&quot;) = &quot;aa&quot;;
-     * </pre>
-     *
-     * @param str
-     * @return
-     */
-    public static String nullStrToEmpty(String str) {
-        return (str == null ? "" : str);
-    }
-
-    /**
      * capitalize first letter
      * <p/>
      * <pre>
@@ -102,7 +70,7 @@ public class StringUtils {
      * @return
      */
     public static String capitalizeFirstLetter(String str) {
-        if (isEmpty(str)) {
+        if (TextUtils.isEmpty(str)) {
             return str;
         }
 
@@ -126,7 +94,7 @@ public class StringUtils {
      * @throws UnsupportedEncodingException if an error occurs
      */
     public static String utf8Encode(String str) {
-        if (!isEmpty(str) && str.getBytes().length != str.length()) {
+        if (!TextUtils.isEmpty(str) && str.getBytes().length != str.length()) {
             try {
                 return URLEncoder.encode(str, "UTF-8");
             } catch (UnsupportedEncodingException e) {
@@ -144,7 +112,7 @@ public class StringUtils {
      * @return
      */
     public static String utf8Encode(String str, String defultReturn) {
-        if (!isEmpty(str) && str.getBytes().length != str.length()) {
+        if (!TextUtils.isEmpty(str) && str.getBytes().length != str.length()) {
             try {
                 return URLEncoder.encode(str, "UTF-8");
             } catch (UnsupportedEncodingException e) {
@@ -180,7 +148,7 @@ public class StringUtils {
      * </ul>
      */
     public static String getHrefInnerHtml(String href) {
-        if (isEmpty(href)) {
+        if (TextUtils.isEmpty(href)) {
             return "";
         }
         String hrefReg = ".*<[\\s]*a[\\s]*.*>(.+?)<[\\s]*/a[\\s]*>.*";
@@ -210,7 +178,7 @@ public class StringUtils {
      * @return
      */
     public static String htmlEscapeCharsToString(String source) {
-        if (StringUtils.isEmpty(source)) {
+        if (TextUtils.isEmpty(source)) {
             return source;
         } else {
             return source.replaceAll("&lt;", "<").replaceAll("&gt;", ">").replaceAll("&amp;", "&")
@@ -232,7 +200,7 @@ public class StringUtils {
      * @return
      */
     public static String fullWidthToHalfWidth(String s) {
-        if (isEmpty(s)) {
+        if (TextUtils.isEmpty(s)) {
             return s;
         }
 
@@ -265,7 +233,7 @@ public class StringUtils {
      * @return
      */
     public static String halfWidthToFullWidth(String s) {
-        if (isEmpty(s)) {
+        if (TextUtils.isEmpty(s)) {
             return s;
         }
 
@@ -348,15 +316,6 @@ public class StringUtils {
         return s.toString();
     }
 
-    /**
-     * 判断字符串是否是空字符串
-     *
-     * @param s
-     * @return
-     */
-    public static boolean isEmptyString(final String s) {
-        return TextUtils.isEmpty(s) || s.trim().length() == 0;
-    }
 
     public static String replaceNull(final String in) {
         return in == null ? "" : in;

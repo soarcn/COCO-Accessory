@@ -167,9 +167,12 @@ public class IntentUtil {
             return launchApp(context, packageName);
         try {
             ComponentName cn = new ComponentName(packageName, className);
-            Intent intent = new Intent();
-            intent.setComponent(cn);
-            context.startActivity(intent);
+            Intent i=new Intent(Intent.ACTION_MAIN);
+            i.addCategory(Intent.CATEGORY_LAUNCHER);
+            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
+                    Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+            i.setComponent(cn);
+            context.startActivity(i);
             return true;
         } catch (Exception e) {
             return false;

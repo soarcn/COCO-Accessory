@@ -240,7 +240,6 @@ public class UIUtils {
 
     }
 
-    @TargetApi(VERSION_CODES.HONEYCOMB_MR2)
     public static int getScreenWidth(final Activity act) {
         if (isApiHighEnough(13)) {
             Point point = new Point();
@@ -250,7 +249,6 @@ public class UIUtils {
             return act.getWindowManager().getDefaultDisplay().getWidth();
     }
 
-    @TargetApi(VERSION_CODES.HONEYCOMB_MR2)
     public static int getScreenHight(final Activity act) {
         if (isApiHighEnough(13)) {
             Point point = new Point();
@@ -288,4 +286,42 @@ public class UIUtils {
         res.offset(0, -statusBarHeight);
         return res;
     }
+
+    /**
+     * Determines if given points are inside view
+     *
+     * @param x    - x coordinate of point
+     * @param y    - y coordinate of point
+     * @param view - view object to compare
+     * @return true if the points are within view bounds, false otherwise
+     */
+    public static boolean isPointInsideView(float x, float y, View view) {
+        int location[] = new int[2];
+        view.getLocationOnScreen(location);
+        int viewX = location[0];
+        int viewY = location[1];
+
+        //point is inside view bounds
+        if ((x > viewX && x < (viewX + view.getWidth())) &&
+                (y > viewY && y < (viewY + view.getHeight()))) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public static boolean inRegion(int rx, int ry, View view) {
+        int[] l = new int[2];
+        view.getLocationOnScreen(l);
+        int x = l[0];
+        int y = l[1];
+        int w = view.getWidth();
+        int h = view.getHeight();
+
+        if (rx < x || rx > x + w || ry < y || ry > y + h) {
+            return false;
+        }
+        return true;
+    }
+
 }

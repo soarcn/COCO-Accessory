@@ -8,7 +8,6 @@ import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 
 import java.io.File;
-import java.util.ArrayList;
 
 /**
  * 和图像资源相关的一些工具类
@@ -111,12 +110,19 @@ public class PhotoUtils {
             }
             case REQUEST_PICK_IMAGE: {
                 final Uri uri = intent.getData();
-                final File file = uri == null ? null : new File(
-                        ImageUtils.getImagePathFromUri(context, uri));
-                if (file != null && file.exists())
-                    return file;
-                else {
-                    mImageUri = null;
+                // TODO For online picasso gallery images, ignore them now
+                if (uri.toString().startsWith("content://com.android.gallery3d.provider"))
+                    return null;
+                try {
+                    final File file = uri == null ? null : new File(
+                            ImageUtils.getImagePathFromUri(context, uri));
+                    if (file != null && file.exists())
+                        return file;
+                    else {
+                        mImageUri = null;
+                    }
+                } catch (Exception e) {
+                    return null;
                 }
                 break;
             }
