@@ -105,6 +105,18 @@ public class Colour extends Color {
         }
     }
 
+    private static final double LM_RED_COEFFICIENT = 0.2126;
+    private static final double LM_GREEN_COEFFICIENT = 0.7152;
+    private static final double LM_BLUE_COEFFICIENT = 0.0722;
+
+    public static int calculateRelativeLuminance(int color) {
+        int red = (int) (Color.red(color) * LM_RED_COEFFICIENT);
+        int green = (int) (Color.green(color) * LM_GREEN_COEFFICIENT);
+        int blue = (int) (Color.blue(color) * LM_BLUE_COEFFICIENT);
+        return red + green + blue;
+    }
+
+
     /**
      * Returns black or white, depending on which color would contrast best with the provided color.
      *

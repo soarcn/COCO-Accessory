@@ -1,6 +1,9 @@
 package com.cocosw.accessory.utils;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Environment;
 import android.os.StatFs;
@@ -32,6 +35,48 @@ public class FileUtils {
     private static File phone_cache_dir;
     private static File sd_cache_dir;
     private static File currentDir;
+
+    private static BroadcastReceiver mExternalStorageReceiver;
+    private static boolean mExternalStorageAvailable = false;
+    private static boolean mExternalStorageWriteable = false;
+
+
+    private static void updateExternalStorageState() {
+        String state = Environment.getExternalStorageState();
+        if (Environment.MEDIA_MOUNTED.equals(state)) {
+            mExternalStorageAvailable = mExternalStorageWriteable = true;
+        } else if (Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
+            mExternalStorageAvailable = true;
+            mExternalStorageWriteable = false;
+        } else {
+            mExternalStorageAvailable = mExternalStorageWriteable = false;
+        }
+        handleExternalStorageState(mExternalStorageAvailable,
+                mExternalStorageWriteable);
+    }
+
+    private static void handleExternalStorageState(boolean mExternalStorageAvailable, boolean mExternalStorageWriteable) {
+        // getCacheDir()
+    }
+
+    public static void startWatchingExternalStorage(Context context) {
+        mExternalStorageReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                Log.i("test", "Storage: " + intent.getData());
+                updateExternalStorageState();
+            }
+        };
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(Intent.ACTION_MEDIA_MOUNTED);
+        filter.addAction(Intent.ACTION_MEDIA_REMOVED);
+        context.registerReceiver(mExternalStorageReceiver, filter);
+        updateExternalStorageState();
+    }
+
+    public static void stopWatchingExternalStorage(Context context) {
+        context.unregisterReceiver(mExternalStorageReceiver);
+    }
 
     /**
      * 获得sd卡上的cache目录
@@ -67,6 +112,10 @@ public class FileUtils {
         } catch (final Exception e) {
             return null;
         }
+    }
+
+    public static File getDownloadCacheDir() {
+        return Environment.getDownloadCacheDirectory();
     }
 
 
@@ -524,7 +573,7 @@ public class FileUtils {
      * This will replace characters that cannot be used in a file name (for instance '/' or '='), with the given replacement character, or with nothing if
      * {@code null} is given.
      *
-     * @param originalName The original name.
+     * @param originalName    The original name.
      * @param replacementChar The replacement character to use or {@code null} to just strip the bad characters.
      * @return A new string equal to {@code originalName} with the bad characters stripped or replaced.
      */
@@ -581,7 +630,7 @@ public class FileUtils {
      * files <strong>and</strong> directories are deleted.
      *
      * @param fileOrDirectory The file or directory to delete.
-     * @param criteria The criteria to use to choose to delete only certain files, or {@code null} to delete all of them.
+     * @param criteria        The criteria to use to choose to delete only certain files, or {@code null} to delete all of them.
      */
     public static void deleteRecursively(File fileOrDirectory, FileFilter criteria) {
         if (fileOrDirectory.isDirectory()) {
