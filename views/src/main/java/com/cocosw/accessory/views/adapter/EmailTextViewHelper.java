@@ -1,21 +1,19 @@
-package com.cocosw.accessory.views;
+package com.cocosw.accessory.views.adapter;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
-import android.content.Context;
 import android.text.InputType;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 
 /**
  * Helper for email input field
- *
+ * <p/>
  * User: Liao Kai
  * Date: 13-8-12
  * Time: 下午10:32
  */
-public class EmailTextViewHelper
-{
+public class EmailTextViewHelper {
 
     //<uses-permission android:name="android.permission.GET_ACCOUNTS" />
     // change the EditText to an AutoCompleteTextView and call setAdapter(getEmailAddressAdapter(context)) on that View.

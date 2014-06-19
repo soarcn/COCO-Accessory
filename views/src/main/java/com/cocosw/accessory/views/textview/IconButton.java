@@ -1,16 +1,15 @@
-package com.cocosw.accessory.views;
+package com.cocosw.accessory.views.textview;
 
 import android.content.Context;
-import android.content.res.TypedArray;
-import android.graphics.Rect;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.widget.Button;
 
 public class IconButton extends Button {
 
-    private static final int[] R_styleable_Button = new int[] {
+    private static final int[] R_styleable_Button = new int[]{
             android.R.attr.drawablePadding,
     };
 
@@ -60,7 +59,7 @@ public class IconButton extends Button {
         int textWidth = bounds.width();
         int contentWidth = drawableWidth + iconPadding + textWidth;
 
-        int contentLeft = (int)((getWidth() / 2.0) - (contentWidth / 2.0));
+        int contentLeft = (int) ((getWidth() / 2.0) - (contentWidth / 2.0));
         setCompoundDrawablePadding(-contentLeft + iconPadding);
         switch (drawablePosition) {
             case LEFT:

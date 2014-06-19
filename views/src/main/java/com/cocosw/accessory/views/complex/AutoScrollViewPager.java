@@ -1,4 +1,4 @@
-package com.cocosw.accessory.views;
+package com.cocosw.accessory.views.complex;
 
 import android.content.Context;
 import android.os.Handler;
@@ -10,7 +10,7 @@ import android.view.MotionEvent;
 
 /**
  * https://github.com/Trinea/android-auto-scroll-view-pager
- *
+ * <p/>
  * Auto Scroll View Pager
  * <ul>
  * <strong>Basic Setting and Usage</strong>
@@ -31,42 +31,58 @@ import android.view.MotionEvent;
  */
 public class AutoScrollViewPager extends ViewPager {
 
-    public static final int DEFAULT_INTERVAL            = 1500;
+    public static final int DEFAULT_INTERVAL = 1500;
 
-    public static final int LEFT                        = 0;
-    public static final int RIGHT                       = 1;
+    public static final int LEFT = 0;
+    public static final int RIGHT = 1;
 
-    /** do nothing when sliding at the last or first item **/
-    public static final int SLIDE_BORDER_MODE_NONE      = 0;
-    /** cycle when sliding at the last or first item **/
-    public static final int SLIDE_BORDER_MODE_CYCLE     = 1;
-    /** deliver event to parent when sliding at the last or first item **/
+    /**
+     * do nothing when sliding at the last or first item *
+     */
+    public static final int SLIDE_BORDER_MODE_NONE = 0;
+    /**
+     * cycle when sliding at the last or first item *
+     */
+    public static final int SLIDE_BORDER_MODE_CYCLE = 1;
+    /**
+     * deliver event to parent when sliding at the last or first item *
+     */
     public static final int SLIDE_BORDER_MODE_TO_PARENT = 2;
 
-    /** auto scroll time in milliseconds, default is {@link #DEFAULT_INTERVAL} **/
-    private long            interval                    = DEFAULT_INTERVAL;
-    /** auto scroll direction, default is {@link #RIGHT} **/
-    private int             direction                   = RIGHT;
-    /** whether automatic cycle when auto scroll reaching the last or first item, default is true **/
-    private boolean         isCycle                     = true;
-    /** whether stop auto scroll when touching, default is true **/
-    private boolean         stopScrollWhenTouch         = true;
-    /** how to process when sliding at the last or first item, default is {@link #SLIDE_BORDER_MODE_NONE} **/
-    private int             slideBorderMode             = SLIDE_BORDER_MODE_NONE;
+    /**
+     * auto scroll time in milliseconds, default is {@link #DEFAULT_INTERVAL} *
+     */
+    private long interval = DEFAULT_INTERVAL;
+    /**
+     * auto scroll direction, default is {@link #RIGHT} *
+     */
+    private int direction = RIGHT;
+    /**
+     * whether automatic cycle when auto scroll reaching the last or first item, default is true *
+     */
+    private boolean isCycle = true;
+    /**
+     * whether stop auto scroll when touching, default is true *
+     */
+    private boolean stopScrollWhenTouch = true;
+    /**
+     * how to process when sliding at the last or first item, default is {@link #SLIDE_BORDER_MODE_NONE} *
+     */
+    private int slideBorderMode = SLIDE_BORDER_MODE_NONE;
 
-    private Handler         handler;
-    private boolean         isAutoScroll                = false;
-    private boolean         isStopByTouch               = false;
-    private float           touchX                      = 0f, downX = 0f;
+    private Handler handler;
+    private boolean isAutoScroll = false;
+    private boolean isStopByTouch = false;
+    private float touchX = 0f, downX = 0f;
 
-    public static final int SCROLL_WHAT                 = 0;
+    public static final int SCROLL_WHAT = 0;
 
-    public AutoScrollViewPager(Context paramContext){
+    public AutoScrollViewPager(Context paramContext) {
         super(paramContext);
         init();
     }
 
-    public AutoScrollViewPager(Context paramContext, AttributeSet paramAttributeSet){
+    public AutoScrollViewPager(Context paramContext, AttributeSet paramAttributeSet) {
         super(paramContext, paramAttributeSet);
         init();
     }
@@ -282,7 +298,7 @@ public class AutoScrollViewPager extends ViewPager {
      * set how to process when sliding at the last or first item
      *
      * @param slideBorderMode {@link #SLIDE_BORDER_MODE_NONE}, {@link #SLIDE_BORDER_MODE_TO_PARENT},
-     * {@link #SLIDE_BORDER_MODE_CYCLE}, default is {@link #SLIDE_BORDER_MODE_NONE}
+     *                        {@link #SLIDE_BORDER_MODE_CYCLE}, default is {@link #SLIDE_BORDER_MODE_NONE}
      */
     public void setSlideBorderMode(int slideBorderMode) {
         this.slideBorderMode = slideBorderMode;

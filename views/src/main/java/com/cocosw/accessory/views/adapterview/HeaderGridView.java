@@ -1,4 +1,4 @@
-package com.cocosw.accessory.views;
+package com.cocosw.accessory.views.adapterview;
 
 import android.app.Activity;
 import android.content.Context;

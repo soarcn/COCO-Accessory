@@ -1,4 +1,4 @@
-package com.cocosw.accessory.views;
+package com.cocosw.accessory.views.complex;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -29,22 +29,22 @@ public class GalleryView extends Gallery {
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
-        if (root!=null)
-        root.requestDisallowInterceptTouchEvent(true);
+        if (root != null)
+            root.requestDisallowInterceptTouchEvent(true);
         return super.dispatchTouchEvent(ev);
     }
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
-        if (root!=null)
-        root.requestDisallowInterceptTouchEvent(true);
+        if (root != null)
+            root.requestDisallowInterceptTouchEvent(true);
         return super.onInterceptTouchEvent(ev);
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if (root!=null)
-        root.requestDisallowInterceptTouchEvent(true);
+        if (root != null)
+            root.requestDisallowInterceptTouchEvent(true);
         return super.onTouchEvent(event);
     }
 }

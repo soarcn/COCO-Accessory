@@ -1,4 +1,4 @@
-package com.cocosw.accessory.views;
+package com.cocosw.accessory.views.layout;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -14,18 +14,22 @@ import android.widget.LinearLayout;
 
 /**
  * A general purpose Layout which simply renders a reflection of its contained
- * child Views in the remaining space below them within the bounds of this control. 
- * For {@link ReflectingLayout} to work properly, it must be setup to provide 
- * sufficient empty space below its children. 
- *
+ * child Views in the remaining space below them within the bounds of this control.
+ * For {@link ReflectingLayout} to work properly, it must be setup to provide
+ * sufficient empty space below its children.
+ * <p/>
  * Copyright Tom Leach
  */
 public class ReflectingLayout extends LinearLayout {
 
-    /** The maximum ratio of the height of the reflection to the source image. */
+    /**
+     * The maximum ratio of the height of the reflection to the source image.
+     */
     private static final float MAX_REFLECTION_RATIO = 0.9F;
 
-    /** The {@link Paint} object we'll use to create the reflection. */
+    /**
+     * The {@link Paint} object we'll use to create the reflection.
+     */
     private Paint paint;
 
     private Matrix vFlipMatrix;
@@ -35,7 +39,7 @@ public class ReflectingLayout extends LinearLayout {
      * Instantiates a new reflecting layout.
      *
      * @param context the context
-     * @param attrs the attrs
+     * @param attrs   the attrs
      */
     public ReflectingLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -76,6 +80,7 @@ public class ReflectingLayout extends LinearLayout {
 
     /**
      * {@inheritDoc}
+     *
      * @see android.view.View#onDraw(android.graphics.Canvas)
      */
     @Override
@@ -174,7 +179,7 @@ public class ReflectingLayout extends LinearLayout {
 
     /**
      * Gets the height of the reflection to be drawn.
-     *
+     * <p/>
      * <p>This is the minimum of either:
      * <ul>
      * <li>The remaining height between the bottom of this layout and the bottom-most

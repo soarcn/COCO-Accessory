@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.cocosw.accessory.views;
+package com.cocosw.accessory.views.layout;
 
 import android.content.Context;
 import android.util.AttributeSet;

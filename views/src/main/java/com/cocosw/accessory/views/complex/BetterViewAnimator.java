@@ -1,4 +1,4 @@
-package com.cocosw.accessory.views;
+package com.cocosw.accessory.views.complex;
 
 import android.content.Context;
 import android.util.AttributeSet;

@@ -1,4 +1,4 @@
-package com.cocosw.accessory.views;
+package com.cocosw.accessory.views.drawable;
 
 /* The MIT License (MIT)
 
@@ -29,21 +29,21 @@ import android.graphics.drawable.ColorDrawable;
 
 /**
  * https://gist.github.com/martyglaubitz/37aa0268727835856061
- *
+ * <p/>
  * viewWhichNeedsBorders.setBackground(new BorderDrawable(null, Color.Black, null, Color.Black, 0, 3, 0, 3))
  */
 
 public class BorderDrawable extends ColorDrawable {
 
-    private Paint   _PaintLeft;
-    private Paint   _PaintTop;
-    private Paint   _PaintRight;
-    private Paint   _PaintBottom;
+    private Paint _PaintLeft;
+    private Paint _PaintTop;
+    private Paint _PaintRight;
+    private Paint _PaintBottom;
 
-    private int     _BorderLeft     = 1;
-    private int     _BorderTop      = 1;
-    private int     _BorderRight    = 1;
-    private int     _BorderBottom   = 1;
+    private int _BorderLeft = 1;
+    private int _BorderTop = 1;
+    private int _BorderRight = 1;
+    private int _BorderBottom = 1;
 
     public BorderDrawable(Integer colorLeft, Integer colorTop, Integer colorRight, Integer colorBottom) {
         super();

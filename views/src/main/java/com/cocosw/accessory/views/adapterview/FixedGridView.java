@@ -1,4 +1,4 @@
-package com.cocosw.accessory.views;
+package com.cocosw.accessory.views.adapterview;
 
 import android.widget.GridView;
 

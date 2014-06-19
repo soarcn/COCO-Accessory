@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.cocosw.accessory.views;
+package com.cocosw.accessory.views.drawable;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapShader;

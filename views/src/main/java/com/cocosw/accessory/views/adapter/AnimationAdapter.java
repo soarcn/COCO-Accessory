@@ -1,4 +1,4 @@
-package com.cocosw.accessory.views;
+package com.cocosw.accessory.views.adapter;
 
 import android.view.animation.Animation;
 

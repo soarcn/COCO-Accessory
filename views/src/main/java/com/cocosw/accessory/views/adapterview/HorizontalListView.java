@@ -1,4 +1,4 @@
-package com.cocosw.accessory.views;
+package com.cocosw.accessory.views.adapterview;
 
 import android.content.Context;
 import android.database.DataSetObserver;
@@ -470,10 +470,8 @@ public class HorizontalListView extends AdapterView<ListAdapter> {
         /**
          * Fill ActiveViews with all of the children of the AbsListView.
          *
-         * @param childCount
-         *            The minimum number of views mActiveViews should hold
-         * @param firstActivePosition
-         *            The position of the first view that will be stored in mActiveViews
+         * @param childCount          The minimum number of views mActiveViews should hold
+         * @param firstActivePosition The position of the first view that will be stored in mActiveViews
          */
         void fillActiveViews(int childCount, int firstActivePosition) {
             if (mActiveViews.length < childCount) {
@@ -499,8 +497,7 @@ public class HorizontalListView extends AdapterView<ListAdapter> {
         /**
          * Get the view corresponding to the specified position. The view will be removed from mActiveViews if it is found.
          *
-         * @param position
-         *            The position to look up in mActiveViews
+         * @param position The position to look up in mActiveViews
          * @return The view if it is found, null otherwise
          */
         View getActiveView(int position) {
@@ -543,8 +540,7 @@ public class HorizontalListView extends AdapterView<ListAdapter> {
         /**
          * Put a view into the ScapViews list. These views are unordered.
          *
-         * @param scrap
-         *            The view to add
+         * @param scrap The view to add
          */
         void addScrapView(View scrap, int viewType) {
             AbsListView.LayoutParams lp = (AbsListView.LayoutParams) scrap.getLayoutParams();
