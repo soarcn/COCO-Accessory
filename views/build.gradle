@@ -20,6 +20,6 @@ apply from: '../config/android-library.gradle'
 apply from: '../config/maven_push.gradle'
 
 dependencies {
-    compile 'com.android.support:support-v4:+'
+    compile 'com.android.support:support-v4:19.+'
 }
 
