@@ -18,9 +18,12 @@ package com.cocosw.accessory.views.complex;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.graphics.Canvas;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import android.util.AttributeSet;
+
+import java.lang.reflect.Method;
 
 /**
  * Web view extension with scrolling fixes
@@ -38,6 +41,7 @@ public class WebView extends android.webkit.WebView {
     public WebView(final Context context, final AttributeSet attrs,
                    final int defStyle, final boolean privateBrowsing) {
         super(context, attrs, defStyle, privateBrowsing);
+        enablePlugins(false);
     }
 
     /**
@@ -48,6 +52,7 @@ public class WebView extends android.webkit.WebView {
     public WebView(final Context context, final AttributeSet attrs,
                    final int defStyle) {
         super(context, attrs, defStyle);
+        enablePlugins(false);
     }
 
     /**
@@ -56,6 +61,7 @@ public class WebView extends android.webkit.WebView {
      */
     public WebView(final Context context, final AttributeSet attrs) {
         super(context, attrs);
+        enablePlugins(false);
     }
 
     /**
@@ -86,6 +92,52 @@ public class WebView extends android.webkit.WebView {
             return super.canScrollHorizontally(direction);
         } else {
             return canScrollCodeHorizontally(direction);
+        }
+    }
+
+
+    @Override
+    public void onDraw(Canvas canvas) {
+        // Workaround for problems in Android 4.2.x
+        // You can't type properly in input texts and nor textareas until you
+        // touch the webview
+        // You can't change the font size until you touch the webview
+        // http://stackoverflow.com/questions/15127762/webview-fails-to-render-until-touched-android-4-2-2
+        if (VERSION.SDK_INT >= VERSION_CODES.JELLY_BEAN) {
+            invalidate();
+        }
+        super.onDraw(canvas);
+    }
+
+
+    protected void enablePlugins(final boolean enabled) {
+        // Android 4.3 and above has no concept of plugin states
+        if (VERSION.SDK_INT >= VERSION_CODES.JELLY_BEAN_MR1) {
+            return;
+        }
+
+        if (VERSION.SDK_INT >= VERSION_CODES.FROYO) {
+            // Note: this is needed to compile against api level 18.
+            try {
+                Class<Enum> pluginStateClass = (Class<Enum>) Class
+                        .forName("android.webkit.WebSettings$PluginState");
+
+                Class<?>[] parameters = {pluginStateClass};
+                Method method = getSettings().getClass()
+                        .getDeclaredMethod("setPluginState", parameters);
+
+                Object pluginState = Enum.valueOf(pluginStateClass, enabled ? "ON" : "OFF");
+                method.invoke(getSettings(), pluginState);
+            } catch (Exception e) {
+
+            }
+        } else {
+            try {
+                Method method = Class.forName("android.webkit.WebSettings")
+                        .getDeclaredMethod("setPluginsEnabled", boolean.class);
+                method.invoke(getSettings(), enabled);
+            } catch (Exception e) {
+            }
         }
     }
 }
