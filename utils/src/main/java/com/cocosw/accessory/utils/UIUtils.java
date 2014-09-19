@@ -16,6 +16,7 @@
 
 package com.cocosw.accessory.utils;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
@@ -24,7 +25,6 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.Configuration;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.Typeface;
@@ -42,8 +42,6 @@ import android.text.style.StyleSpan;
 import android.view.View;
 import android.widget.TextView;
 
-import java.util.Formatter;
-import java.util.Locale;
 import java.util.TimeZone;
 
 /**
@@ -166,6 +164,22 @@ public class UIUtils {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO;
     }
 
+    public static boolean hasICSMR1() {
+        return isApiHighEnough(VERSION_CODES.ICE_CREAM_SANDWICH_MR1);
+    }
+
+    public static boolean hasJBMR1() {
+        return isApiHighEnough(Build.VERSION_CODES.JELLY_BEAN_MR1);
+    }
+
+    public static boolean hasJBMR2() {
+        return isApiHighEnough(Build.VERSION_CODES.JELLY_BEAN_MR2);
+    }
+
+    public static boolean hasJellyBean() {
+        return isApiHighEnough(Build.VERSION_CODES.JELLY_BEAN);
+    }
+
     public static boolean hasGingerbread() {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD;
     }
@@ -240,6 +254,7 @@ public class UIUtils {
 
     }
 
+    @SuppressLint("NewApi")
     public static int getScreenWidth(final Activity act) {
         if (isApiHighEnough(13)) {
             Point point = new Point();
@@ -249,6 +264,7 @@ public class UIUtils {
             return act.getWindowManager().getDefaultDisplay().getWidth();
     }
 
+    @SuppressLint("NewApi")
     public static int getScreenHight(final Activity act) {
         if (isApiHighEnough(13)) {
             Point point = new Point();
