@@ -15,6 +15,7 @@
  */
 package com.cocosw.accessory.views.adapter;
 
+import android.content.Context;
 import android.view.View;
 import android.widget.BaseAdapter;
 import android.widget.HeaderViewListAdapter;
@@ -42,21 +43,20 @@ public class HeaderFooterListAdapter<E extends BaseAdapter> extends
     /**
      * Create header footer adapter
      *
-     * @param view
      * @param adapter
      */
-    public HeaderFooterListAdapter(ListView view, E adapter) {
-        this(new ArrayList<FixedViewInfo>(), new ArrayList<FixedViewInfo>(),
-                view, adapter);
+    public HeaderFooterListAdapter(E adapter, Context context) {
+        this(new ArrayList<FixedViewInfo>(), new ArrayList<FixedViewInfo>(), context,
+                adapter);
     }
 
     private HeaderFooterListAdapter(ArrayList<FixedViewInfo> headerViewInfos,
-                                    ArrayList<FixedViewInfo> footerViewInfos, ListView view, E adapter) {
+                                    ArrayList<FixedViewInfo> footerViewInfos, Context context, E adapter) {
         super(headerViewInfos, footerViewInfos, adapter);
 
         headers = headerViewInfos;
         footers = footerViewInfos;
-        list = view;
+        list = new ListView(context);
         wrapped = adapter;
     }
 
