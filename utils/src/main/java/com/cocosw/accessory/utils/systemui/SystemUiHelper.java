@@ -82,6 +82,8 @@ public final class SystemUiHelper {
      */
     public static final int FLAG_IMMERSIVE_STICKY = 0x2;
 
+    public static final int FLAG_FLEX_LAYOUT = 0x4;
+
     private static final String LOG_TAG = SystemUiHelper.class.getSimpleName();
 
     private final SystemUiHelperImpl mImpl;
