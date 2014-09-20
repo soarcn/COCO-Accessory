@@ -10,7 +10,9 @@ import android.net.NetworkInfo;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
-import java.util.*;
+import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.WeakHashMap;
 
 /**
  *
@@ -141,8 +143,8 @@ public class NetworkConnectivity {
 	}
 
 	/**
-	 * 获得当前的ip地址
-	 * 
+     * Get current local ip
+     *
 	 * @return
 	 */
 	public String getLocalIpAddress() {
@@ -172,8 +174,8 @@ public class NetworkConnectivity {
 	}
 
 	/**
-	 * 根据传入值,获得当前的网络连接状态
-	 * 
+     * refresh status base on the networkInfo
+     *
 	 * @param networkInfo
 	 */
 	private void refresh(final NetworkInfo networkInfo) {
@@ -190,7 +192,7 @@ public class NetworkConnectivity {
 	}
 
 
-    public void start() {
+    private void start() {
         IntentFilter mNetworkStateChangedFilter = new IntentFilter();
         mNetworkStateChangedFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
         if (mNetworkStateIntentReceiver!=null) {

@@ -11,15 +11,12 @@ import android.widget.ListAdapter;
 
 import com.cocosw.accessory.views.layout.IcsLinearLayout;
 
-/**
- * Project: Accessory
- * Created by LiaoKai(soarcn) on 2014/9/16.
- */
+
 public class LinearListView extends IcsLinearLayout {
 
     private static final int[] R_styleable_LinearListView = new int[]{
         /* 0 */android.R.attr.entries,
-		/* 1 */android.R.attr.dividerHeight
+        /* 1 */android.R.attr.dividerHeight
     };
 
     private static final int LinearListView_entries = 0;
