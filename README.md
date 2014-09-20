@@ -10,15 +10,19 @@ Please be aware that this project still under development, so classes and interf
 Most of classes in this project are from other opensource projects. 
 
 Most of classes are compatible in android 2.3+
+
+gradle config
+
+    ```groovy
+    compile 'com.cocosw.accessory:connectivity:+@aar' 
+    compile 'com.cocosw.accessory:views:+@aar' 
+    compile 'com.cocosw.accessory:utils:+@aar' 
+    ```
  
 Connectivity
 --------------
 
 - A single class provide an simple way to get/observe mobile phone network connectivity.
-- gradle config
-    ```groovy
-    compile 'com.cocosw.accessory:connectivity:+@aar' 
-    ```
 - Example
 ```java    
     NetworkConnectivity.getInstance(context).addNetworkMonitorListener(new NetworkMonitorListener() {
