@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 Snowdream Mobile <yanghui1986527@gmail.com>
+ * Copyright (C) 2014
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-apply plugin: 'eclipse'
-apply plugin: 'idea'
-apply from: '../config/android-library.gradle'
-apply from: '../config/maven_push.gradle'
+apply from: 'https://raw.githubusercontent.com/soarcn/gradle/master/android-library.gradle'
+apply from: 'https://raw.githubusercontent.com/soarcn/gradle/master/maven_push.gradle'
+
 
 dependencies {
-    compile 'com.android.support:support-v4:19.+'
+    compile 'com.android.support:support-v4:20.0.0'
 }
 
