@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-apply plugin: 'android'
+apply plugin: 'com.android.application'
 
 dependencies {
 }
@@ -22,7 +22,7 @@ dependencies {
 android {
     compileSdkVersion Integer.parseInt(project.COMPILE_SDK_VERSION)
     buildToolsVersion project.BUILD_TOOLS_VERSION
-
+    compileOptions.encoding = "UTF-8"
     defaultConfig {
         versionCode Integer.parseInt(project.VERSION_CODE)
         versionName project.VERSION_NAME

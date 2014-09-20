@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-apply plugin: 'android-library'
+apply plugin: 'com.android.library'
 
 archivesBaseName = POM_NAME
 
@@ -24,6 +24,7 @@ dependencies {
 android {
     compileSdkVersion Integer.parseInt(project.COMPILE_SDK_VERSION)
     buildToolsVersion project.BUILD_TOOLS_VERSION
+    compileOptions.encoding = "UTF-8"
 
     defaultConfig {
         versionCode Integer.parseInt(project.VERSION_CODE)
@@ -49,20 +50,3 @@ android {
         targetCompatibility JavaVersion.VERSION_1_7
     }
 }
-
-//    android.libraryVariants.all { variant ->
-//
-//        task("generate${variant.name}Javadoc", type: Javadoc) {
-//            title = "android lib - android-gradle-template $version API"
-//            description "Generates Javadoc for $variant.name."
-//            source = variant.javaCompile.source
-//            ext.androidJar =
-//                    "${android.plugin.sdkDirectory}/platforms/${android.compileSdkVersion}/android.jar"
-//            classpath = files(variant.javaCompile.classpath.files) + files(ext.androidJar)
-//            options.links("http://docs.oracle.com/javase/7/docs/api/");
-//            options.linksOffline("http://d.android.com/reference","${android.plugin.sdkDirectory}/docs/reference");
-//            exclude '**/BuildConfig.java'
-//            exclude '**/R.java'
-//            exclude '**/Log2File.java'
-//        }
-//    }
