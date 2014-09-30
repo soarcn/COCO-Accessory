@@ -15,8 +15,12 @@
  */
 package com.cocosw.accessory.views.textview;
 
+import android.content.Context;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.ColorRes;
+import android.support.annotation.DrawableRes;
+import android.support.annotation.StringRes;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -38,6 +42,69 @@ import java.util.Date;
  * Helpers on top of {@link SpannableStringBuilder}
  */
 public class StyledText extends SpannableStringBuilder {
+
+    private Context context;
+
+    public StyledText(Context context) {
+        this.context = context;
+    }
+
+    public StyledText() {
+    }
+
+
+    public StyledText append(@StringRes int textRes) {
+        checkContext();
+        append(context.getText(textRes));
+        return this;
+    }
+
+    public StyledText appendDrawable(@DrawableRes int drawRes) {
+        checkContext();
+        append(context.getResources().getDrawable(drawRes));
+        return this;
+    }
+
+    /**
+     * Append text with custom background color
+     *
+     * @param textRes
+     * @param colorRes
+     * @return this text
+     */
+    public StyledText background(@StringRes int textRes, @ColorRes int colorRes) {
+        checkContext();
+        background(context.getText(textRes), context.getResources().getColor(colorRes));
+        return this;
+    }
+
+    /**
+     * Append text in bold
+     *
+     * @param textRes
+     * @return this text
+     */
+    public StyledText bold(@StringRes int textRes) {
+        checkContext();
+        return append(context.getText(textRes));
+    }
+
+    /**
+     * Append text in with custom foreground color
+     *
+     * @param textRes
+     * @param colorRes
+     * @return this text
+     */
+    public StyledText foreground(@StringRes int textRes, @ColorRes int colorRes) {
+        checkContext();
+        foreground(context.getText(textRes), context.getResources().getColor(colorRes));
+        return this;
+    }
+
+    private void checkContext() {
+        assert context != null;
+    }
 
     /**
      * Append text and span to end of this text
@@ -104,7 +171,7 @@ public class StyledText extends SpannableStringBuilder {
     }
 
     /**
-     * Append text in bold
+     * Append text with custom background color
      *
      * @param text
      * @param color
@@ -195,4 +262,5 @@ public class StyledText extends SpannableStringBuilder {
 
         return this;
     }
+
 }
