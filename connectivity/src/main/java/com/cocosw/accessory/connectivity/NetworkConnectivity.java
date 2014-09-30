@@ -107,21 +107,17 @@ public class NetworkConnectivity {
         }
 	}
 
-	/**
-	 * get current network Name/Type
-	 *
-	 * @return network Name/Type
-	 */
-	public String getNetworkType() {
-		if (networkInfo != null) {
-			return networkInfo.getExtraInfo();
-		} else {
-			return null;
-		}
-	}
+    /**
+     * Get network info instance
+     *
+     * @return NetworkInfo
+     */
+    public NetworkInfo getNetworkInfo() {
+        return networkInfo;
+    }
 
-	public boolean isWifi() {
-		return isWifi;
+    public boolean isWifi() {
+        return isWifi;
 	}
 
 	public boolean checkWifi() {
@@ -149,10 +145,10 @@ public class NetworkConnectivity {
 	 */
 	public String getLocalIpAddress() {
 		if (ip == null) {
-			ip = NetworkConnectivity.getInstance().getIp();
-		}
-		return "127.0.0.1";
-	}
+            ip = getIp();
+        }
+        return ip;
+    }
 
 	private String getIp() {
 		try {
