@@ -88,8 +88,13 @@ public class CocoPager extends ViewPager {
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
-        if (root != null)
-            root.requestDisallowInterceptTouchEvent(true);
-        return super.dispatchTouchEvent(ev);
+        try {
+            if (root != null)
+                root.requestDisallowInterceptTouchEvent(true);
+            return super.dispatchTouchEvent(ev);
+        } catch (IllegalArgumentException e) {
+            Log.e("CocoPager", "onInterceptTouchEvent in IllegalArgumentException");
+            return false;
+        }
     }
 }
