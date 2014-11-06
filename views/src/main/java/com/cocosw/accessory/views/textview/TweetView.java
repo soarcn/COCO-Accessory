@@ -42,7 +42,7 @@ public class TweetView extends TextView {
                 try {
                     x -= widget.getTotalPaddingLeft();
                     y -= widget.getTotalPaddingTop();
-                } catch (final Exception e) {
+                } catch (final Exception ignored) {
 
                 }
                 x -= widget.getTotalPaddingLeft();

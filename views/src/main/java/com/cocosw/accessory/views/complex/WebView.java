@@ -128,7 +128,7 @@ public class WebView extends android.webkit.WebView {
 
                 Object pluginState = Enum.valueOf(pluginStateClass, enabled ? "ON" : "OFF");
                 method.invoke(getSettings(), pluginState);
-            } catch (Exception e) {
+            } catch (Exception ignored) {
 
             }
         } else {
@@ -136,7 +136,7 @@ public class WebView extends android.webkit.WebView {
                 Method method = Class.forName("android.webkit.WebSettings")
                         .getDeclaredMethod("setPluginsEnabled", boolean.class);
                 method.invoke(getSettings(), enabled);
-            } catch (Exception e) {
+            } catch (Exception ignored) {
             }
         }
     }
