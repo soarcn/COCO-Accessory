@@ -30,6 +30,8 @@ import java.lang.reflect.Method;
  */
 public class WebView extends android.webkit.WebView {
 
+    private OnScrollChangedListener mOnScrollChangedListener;
+
     /**
      * @param context
      * @param attrs
@@ -62,6 +64,14 @@ public class WebView extends android.webkit.WebView {
     public WebView(final Context context, final AttributeSet attrs) {
         super(context, attrs);
         enablePlugins(false);
+    }
+
+    @Override
+    protected void onScrollChanged(int l, int t, int oldl, int oldt) {
+        super.onScrollChanged(l, t, oldl, oldt);
+        if (mOnScrollChangedListener != null) {
+            mOnScrollChangedListener.onScrollChanged(this, l, t, oldl, oldt);
+        }
     }
 
     /**
@@ -139,5 +149,14 @@ public class WebView extends android.webkit.WebView {
             } catch (Exception ignored) {
             }
         }
+    }
+
+    public void setOnScrollChangedListener(OnScrollChangedListener mOnScrollChangedListener) {
+        this.mOnScrollChangedListener = mOnScrollChangedListener;
+    }
+
+
+    public interface OnScrollChangedListener {
+        void onScrollChanged(WebView webView, int l, int t, int oldl, int oldt);
     }
 }

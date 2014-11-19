@@ -101,8 +101,6 @@ public abstract class MultiTypeAdapter extends TypeAdapter {
      */
     public MultiTypeAdapter clear() {
         items.clear();
-
-        notifyDataSetChanged();
         return this;
     }
 
