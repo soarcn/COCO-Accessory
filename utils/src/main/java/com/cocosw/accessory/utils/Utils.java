@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
+import android.net.Uri;
+import android.text.TextUtils;
 import android.util.Log;
 
 import java.io.BufferedReader;
@@ -19,7 +21,10 @@ import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -123,6 +128,45 @@ public class Utils {
             e.printStackTrace();
             return null;
         }
+    }
+
+    /**
+     * get a string from uri
+     *
+     * @param uri
+     * @return
+     */
+    public static String getCacheFilenameForUri(Uri uri) {
+        StringBuilder filename = new StringBuilder();
+        filename.append(uri.getScheme()).append("_")
+                .append(uri.getHost()).append("_");
+        String encodedPath = uri.getEncodedPath();
+        if (!TextUtils.isEmpty(encodedPath)) {
+            int length = encodedPath.length();
+            if (length > 60) {
+                encodedPath = encodedPath.substring(length - 60);
+            }
+            encodedPath = encodedPath.replace('/', '_');
+            filename.append(encodedPath).append("_");
+        }
+        try {
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            md.update(uri.toString().getBytes("UTF-8"));
+            byte[] digest = md.digest();
+            for (byte b : digest) {
+                if ((0xff & b) < 0x10) {
+                    filename.append("0").append(Integer.toHexString((0xFF & b)));
+                } else {
+                    filename.append(Integer.toHexString(0xFF & b));
+                }
+            }
+        } catch (NoSuchAlgorithmException e) {
+            filename.append(uri.toString().hashCode());
+        } catch (UnsupportedEncodingException e) {
+            filename.append(uri.toString().hashCode());
+        }
+
+        return filename.toString();
     }
 
     /**

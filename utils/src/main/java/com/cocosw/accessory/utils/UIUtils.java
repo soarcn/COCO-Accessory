@@ -152,6 +152,9 @@ public class UIUtils {
                 "com.google.android.tv");
     }
 
+    private static boolean hasLollipop() {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
+    }
 
     public static boolean hasKitKat() {
         return isApiHighEnough(VERSION_CODES.KITKAT);

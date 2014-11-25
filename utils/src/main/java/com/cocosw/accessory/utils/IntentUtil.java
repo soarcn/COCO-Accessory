@@ -1,6 +1,8 @@
 package com.cocosw.accessory.utils;
 
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
 import android.content.Context;
@@ -44,6 +46,40 @@ public class IntentUtil {
             IntentUtil.openUrl(url, context);
         }
 
+    }
+
+    public static boolean doRestart(Context c) {
+        try {
+            //check if the context is given
+            if (c != null) {
+                //fetch the packagemanager so we can get the default launch activity
+                // (you can replace this intent with any other activity if you want
+                PackageManager pm = c.getPackageManager();
+                //check if we got the PackageManager
+                if (pm != null) {
+                    //create the intent with the default start activity for your application
+                    Intent mStartActivity = pm.getLaunchIntentForPackage(
+                            c.getPackageName()
+                    );
+                    if (mStartActivity != null) {
+                        mStartActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        //create a pending intent so the application is restarted after System.exit(0) was called.
+                        // We use an AlarmManager to call this intent in 100ms
+                        int mPendingIntentId = 223344;
+                        PendingIntent mPendingIntent = PendingIntent
+                                .getActivity(c, mPendingIntentId, mStartActivity,
+                                        PendingIntent.FLAG_CANCEL_CURRENT);
+                        AlarmManager mgr = (AlarmManager) c.getSystemService(Context.ALARM_SERVICE);
+                        mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100, mPendingIntent);
+                        //kill the application
+                        System.exit(0);
+                    }
+                }
+            }
+        } catch (Exception ex) {
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -540,15 +576,15 @@ public class IntentUtil {
      * @param scope You can restrict selection by passing required content type. Examples:
      *              <p/>
      *              <code><pre>
-     *                                                     // Select only from users with emails
-     *                                                     IntentUtils.pickContact(ContactsContract.CommonDataKinds.Email.CONTENT_TYPE);
+     *                                                                  // Select only from users with emails
+     *                                                                  IntentUtils.pickContact(ContactsContract.CommonDataKinds.Email.CONTENT_TYPE);
      *              <p/>
-     *                                                     // Select only from users with phone numbers on pre Eclair devices
-     *                                                     IntentUtils.pickContact(Contacts.Phones.CONTENT_TYPE);
+     *                                                                  // Select only from users with phone numbers on pre Eclair devices
+     *                                                                  IntentUtils.pickContact(Contacts.Phones.CONTENT_TYPE);
      *              <p/>
-     *                                                     // Select only from users with phone numbers on devices with Eclair and higher
-     *                                                     IntentUtils.pickContact(ContactsContract.CommonDataKinds.Phone.CONTENT_TYPE);
-     *                                                     </pre></code>
+     *                                                                  // Select only from users with phone numbers on devices with Eclair and higher
+     *                                                                  IntentUtils.pickContact(ContactsContract.CommonDataKinds.Phone.CONTENT_TYPE);
+     *                                                                  </pre></code>
      */
     public static Intent pickContact(String scope) {
         Intent intent;

@@ -4,9 +4,10 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.Build;
 import android.os.Environment;
 import android.os.StatFs;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.os.EnvironmentCompat;
 import android.util.Log;
 
 import java.io.BufferedReader;
@@ -88,18 +89,7 @@ public class FileUtils {
         if (FileUtils.sd_cache_dir != null) {
             return FileUtils.sd_cache_dir;
         }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO) {
-            FileUtils.sd_cache_dir = FileUtils.getCacheDir(context
-                    .getExternalCacheDir());
-        } else {
-            FileUtils.sd_cache_dir = FileUtils.getCacheDir(new File(Environment
-                    .getExternalStorageDirectory().getPath()
-                    + "/Android/data/"
-                    + context.getPackageName() + "/cache/"));
-        }
-        if (FileUtils.sd_cache_dir == null) {
-            return FileUtils.getPhoneCacheDir(context);
-        }
+        FileUtils.sd_cache_dir = getBestAvailableCacheRoot(context);
         return FileUtils.sd_cache_dir;
     }
 
@@ -112,6 +102,42 @@ public class FileUtils {
         } catch (final Exception e) {
             return null;
         }
+    }
+
+    public static File getBestAvailableCacheRoot(Context context) {
+        File[] roots = ContextCompat.getExternalCacheDirs(context);
+        if (roots != null) {
+            for (File root : roots) {
+                if (root == null) {
+                    continue;
+                }
+
+                if (Environment.MEDIA_MOUNTED.equals(EnvironmentCompat.getStorageState(root))) {
+                    return root;
+                }
+            }
+        }
+
+        // Worst case, resort to internal storage
+        return context.getCacheDir();
+    }
+
+    public static File getBestAvailableFilesRoot(Context context) {
+        File[] roots = ContextCompat.getExternalFilesDirs(context, null);
+        if (roots != null) {
+            for (File root : roots) {
+                if (root == null) {
+                    continue;
+                }
+
+                if (Environment.MEDIA_MOUNTED.equals(EnvironmentCompat.getStorageState(root))) {
+                    return root;
+                }
+            }
+        }
+
+        // Worst case, resort to internal storage
+        return context.getFilesDir();
     }
 
     public static File getDownloadCacheDir() {

@@ -5,6 +5,8 @@ package com.cocosw.accessory.views;
  */
 
 import android.graphics.Color;
+import android.graphics.ColorFilter;
+import android.graphics.ColorMatrixColorFilter;
 
 public class Colour extends Color {
 
@@ -126,6 +128,16 @@ public class Colour extends Color {
         return Color.argb(scaleAlpha ? (Math.round(Color.alpha(color) * factor)) : Color.alpha(color),
                 Math.round(Color.red(color) * factor), Math.round(Color.green(color) * factor),
                 Math.round(Color.blue(color) * factor));
+    }
+
+    // Desaturates and color-scrims the image
+    public static ColorFilter makeImageScrimColorFilter(int sessionColor, float a, float sat) {
+        return new ColorMatrixColorFilter(new float[]{
+                ((1 - 0.213f) * sat + 0.213f) * a, ((0 - 0.715f) * sat + 0.715f) * a, ((0 - 0.072f) * sat + 0.072f) * a, 0, Color.red(sessionColor) * (1 - a),
+                ((0 - 0.213f) * sat + 0.213f) * a, ((1 - 0.715f) * sat + 0.715f) * a, ((0 - 0.072f) * sat + 0.072f) * a, 0, Color.green(sessionColor) * (1 - a),
+                ((0 - 0.213f) * sat + 0.213f) * a, ((0 - 0.715f) * sat + 0.715f) * a, ((1 - 0.072f) * sat + 0.072f) * a, 0, Color.blue(sessionColor) * (1 - a),
+                0, 0, 0, 0, 255
+        });
     }
 
     /**

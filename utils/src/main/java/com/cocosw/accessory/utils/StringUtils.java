@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Array;
 import java.net.URLEncoder;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -32,6 +33,10 @@ public class StringUtils {
     public static String toString(Intent intent) {
         if (intent == null) return "null";
         return intent.toString() + ", extras=" + toString(intent.getExtras());
+    }
+
+    public static String computeWeakHash(String string) {
+        return String.format(Locale.US, "%08x%08x", string.hashCode(), string.length());
     }
 
     /**
