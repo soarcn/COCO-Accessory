@@ -19,6 +19,7 @@ package com.cocosw.accessory.views.textview;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.content.res.TypedArray;
 import android.text.Layout;
 import android.text.StaticLayout;
 import android.text.TextPaint;
@@ -27,6 +28,8 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
 import android.widget.TextView;
+
+import com.cocosw.accessory.view.R;
 
 
 /**
@@ -79,18 +82,18 @@ public class AutofitTextView extends TextView {
         int minTextSize = (int) scaledDensity * DEFAULT_MIN_TEXT_SIZE;
         float precision = PRECISION;
 
-//        if (attrs != null) {
-//            TypedArray ta = context.obtainStyledAttributes(
-//                    attrs,
-//                    R.styleable.AutofitTextView,
-//                    defStyle,
-//                    0);
-//            sizeToFit = ta.getBoolean(R.styleable.AutofitTextView_sizeToFit, sizeToFit);
-//            minTextSize = ta.getDimensionPixelSize(R.styleable.AutofitTextView_minTextSize,
-//                    minTextSize);
-//            precision = ta.getFloat(R.styleable.AutofitTextView_precision, precision);
-//            ta.recycle();
-//        }
+        if (attrs != null) {
+            TypedArray ta = context.obtainStyledAttributes(
+                    attrs,
+                    R.styleable.AutofitTextView,
+                    defStyle,
+                    0);
+            sizeToFit = ta.getBoolean(R.styleable.AutofitTextView_sizeToFit, sizeToFit);
+            minTextSize = ta.getDimensionPixelSize(R.styleable.AutofitTextView_minTextSize,
+                    minTextSize);
+            precision = ta.getFloat(R.styleable.AutofitTextView_precision, precision);
+            ta.recycle();
+        }
 
         mPaint = new TextPaint();
         setSizeToFit(sizeToFit);
@@ -129,15 +132,11 @@ public class AutofitTextView extends TextView {
      * {@inheritDoc}
      */
     @Override
-    public float getTextSize() {
-        return mMaxTextSize;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public void setTextSize(int unit, float size) {
+        if (!mSizeToFit) {
+            super.setTextSize(unit, size);
+        }
+
         Context context = getContext();
         Resources r = Resources.getSystem();
 
