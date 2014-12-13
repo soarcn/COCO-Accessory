@@ -18,10 +18,14 @@ package com.cocosw.accessory.views;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.DisplayMetrics;
 import android.view.TouchDelegate;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ListView;
 
 import static android.content.Context.INPUT_METHOD_SERVICE;
 import static android.view.View.GONE;
@@ -160,4 +164,54 @@ public class ViewUtils {
             manager.hideSoftInputFromWindow(view.getWindowToken(), 0);
         return view;
     }
+
+    /**
+     * Compat version of removeGlobalOnLayoutListener
+     *
+     * @param view
+     * @param listener
+     */
+    public static void removeGlobalOnLayoutListener(View view, ViewTreeObserver.OnGlobalLayoutListener listener) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN)
+            // recommended removeOnGlobalLayoutListener method is available since API 16 only
+            view.getViewTreeObserver().removeGlobalOnLayoutListener(listener);
+        else
+            view.getViewTreeObserver().removeOnGlobalLayoutListener(listener);
+    }
+
+
+    /**
+     * Do something when a view's layout is ready
+     *
+     * @param view
+     * @param runnable
+     */
+    public static void runOnLayoutIsReady(@Nullable final View view, @NonNull final Runnable runnable) {
+        if (view != null) {
+            if (view.isShown())
+                runnable.run();
+            else
+                view.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                    @SuppressWarnings("deprecation")
+                    @Override
+                    public void onGlobalLayout() {
+                        runnable.run();
+                        if (view != null)
+                            removeGlobalOnLayoutListener(view, this);
+                    }
+                });
+        }
+    }
+
+    public static void scrollToTop(ListView view) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO)
+            view.smoothScrollToPosition(0);
+        else view.setSelection(0);
+    }
+
+    public static void scrollToEnd(ListView view) {
+        int n = view.getAdapter().getCount();
+    }
+
+
 }

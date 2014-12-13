@@ -31,6 +31,26 @@ public class SliderPanel extends FrameLayout {
      * Constants
      */
 
+    /**
+     * Edge flag indicating that the left edge should be affected.
+     */
+    public static final int EDGE_LEFT = ViewDragHelper.EDGE_LEFT;
+
+    /**
+     * Edge flag indicating that the right edge should be affected.
+     */
+    public static final int EDGE_RIGHT = ViewDragHelper.EDGE_RIGHT;
+
+    /**
+     * Edge flag indicating that the bottom edge should be affected.
+     */
+    public static final int EDGE_BOTTOM = ViewDragHelper.EDGE_BOTTOM;
+
+    /**
+     * Edge flag set indicating all edges should be affected.
+     */
+    public static final int EDGE_ALL = EDGE_LEFT | EDGE_RIGHT | EDGE_BOTTOM;
+
     private static final int MIN_FLING_VELOCITY = 400; // dips per second
 
     private static final float MAX_DIM_ALPHA = 0.8f; // 80% black alpha shade
@@ -79,7 +99,6 @@ public class SliderPanel extends FrameLayout {
 
         mDragHelper = ViewDragHelper.create(this, 1f, mCallback);
         mDragHelper.setMinVelocity(minVel);
-        mDragHelper.setEdgeTrackingEnabled(ViewDragHelper.EDGE_LEFT);
 
         ViewGroupCompat.setMotionEventSplittingEnabled(this, false);
 
@@ -143,46 +162,110 @@ public class SliderPanel extends FrameLayout {
     }
 
 
+    private int mEdgeFlag = EDGE_LEFT;
+    private int mTrackingEdge;
+
+    public void setEdgeDrag(int edge) {
+        if (edge != EDGE_LEFT && edge != EDGE_BOTTOM && edge != EDGE_RIGHT && edge != EDGE_ALL)
+            throw new IllegalArgumentException("Must in EDGE_LEFT,EDGE_ALL,EDGE_RIGHT,EDGE_BOTTOM");
+        mDragHelper.setEdgeTrackingEnabled(edge);
+        mEdgeFlag = edge;
+    }
+
     /**
      * The drag helper callback interface
      */
     private ViewDragHelper.Callback mCallback = new ViewDragHelper.Callback() {
 
-        @Override
-        public boolean tryCaptureView(View child, int pointerId) {
-            return child.getId() == mDecorView.getId();
-        }
+        private boolean mIsScrollOverValid;
+        private float mScrollPercent;
+        private float mScrollThreshold = 0.4f;
+        private static final int OVERSCROLL_DISTANCE = 10;
 
         @Override
-        public int clampViewPositionHorizontal(View child, int left, int dx) {
-            return clamp(left, 0, mScreenWidth);
+        public boolean tryCaptureView(View view, int i) {
+            boolean ret = mDragHelper.isEdgeTouched(mEdgeFlag, i);
+            if (ret) {
+                if (mDragHelper.isEdgeTouched(EDGE_LEFT, i)) {
+                    mTrackingEdge = EDGE_LEFT;
+                } else if (mDragHelper.isEdgeTouched(EDGE_RIGHT, i)) {
+                    mTrackingEdge = EDGE_RIGHT;
+                } else if (mDragHelper.isEdgeTouched(EDGE_BOTTOM, i)) {
+                    mTrackingEdge = EDGE_BOTTOM;
+                }
+                mIsScrollOverValid = true;
+            }
+            return ret;
         }
 
         @Override
         public int getViewHorizontalDragRange(View child) {
-            return mScreenWidth;
+            return mEdgeFlag & (EDGE_LEFT | EDGE_RIGHT);
         }
 
         @Override
-        public void onViewReleased(View releasedChild, float xvel, float yvel) {
-            super.onViewReleased(releasedChild, xvel, yvel);
-
-            final int width = getWidth();
-            float offset = width - releasedChild.getLeft();
-            int left = xvel < 0 || xvel == 0 && offset > 0.5f ? 0 : mScreenWidth;
-
-            mDragHelper.settleCapturedViewAt(left, releasedChild.getTop());
-            invalidate();
+        public int getViewVerticalDragRange(View child) {
+            return mEdgeFlag & EDGE_BOTTOM;
         }
 
         @Override
         public void onViewPositionChanged(View changedView, int left, int top, int dx, int dy) {
             super.onViewPositionChanged(changedView, left, top, dx, dy);
-            float percent = 1 - ((float) left / (float) mScreenWidth);
+            if ((mTrackingEdge & EDGE_LEFT) != 0) {
+                mScrollPercent = Math.abs((float) left
+                        / (mDecorView.getWidth()));
+            } else if ((mTrackingEdge & EDGE_RIGHT) != 0) {
+                mScrollPercent = Math.abs((float) left
+                        / (mDecorView.getWidth()));
+            } else if ((mTrackingEdge & EDGE_BOTTOM) != 0) {
+                mScrollPercent = Math.abs((float) top
+                        / (mDecorView.getHeight()));
+            }
+            invalidate();
+            if (mScrollPercent < mScrollThreshold && !mIsScrollOverValid) {
+                mIsScrollOverValid = true;
+            }
+        }
 
-            // Update the dimmer alpha
-            float alpha = percent * MAX_DIM_ALPHA;
-            ViewCompat.setAlpha(mDimView, alpha);
+        @Override
+        public void onViewReleased(View releasedChild, float xvel, float yvel) {
+            final int childWidth = releasedChild.getWidth();
+            final int childHeight = releasedChild.getHeight();
+
+            int left = 0, top = 0;
+            if ((mTrackingEdge & EDGE_LEFT) != 0) {
+                left = xvel > 0 || xvel == 0 && mScrollPercent > mScrollThreshold ? childWidth
+                        + OVERSCROLL_DISTANCE : 0;
+            } else if ((mTrackingEdge & EDGE_RIGHT) != 0) {
+                left = xvel < 0 || xvel == 0 && mScrollPercent > mScrollThreshold ? -(childWidth
+                        + OVERSCROLL_DISTANCE) : 0;
+            } else if ((mTrackingEdge & EDGE_BOTTOM) != 0) {
+                top = yvel < 0 || yvel == 0 && mScrollPercent > mScrollThreshold ? -(childHeight
+                        + OVERSCROLL_DISTANCE) : 0;
+            }
+
+            mDragHelper.settleCapturedViewAt(left, top);
+            invalidate();
+        }
+
+        @Override
+        public int clampViewPositionHorizontal(View child, int left, int dx) {
+            int ret = 0;
+            if ((mTrackingEdge & EDGE_LEFT) != 0) {
+                ret = Math.min(child.getWidth(), Math.max(left, 0));
+            } else if ((mTrackingEdge & EDGE_RIGHT) != 0) {
+                ret = Math.min(0, Math.max(left, -child.getWidth()));
+            }
+            return ret;
+        }
+
+        @Override
+        public int clampViewPositionVertical(View child, int top, int dy) {
+            int ret = 0;
+            if ((mTrackingEdge & EDGE_BOTTOM) != 0) {
+                ret = Math.min(0, Math.max(top, -child.getHeight()));
+            }
+            return ret;
         }
 
         @Override
@@ -190,7 +273,7 @@ public class SliderPanel extends FrameLayout {
             super.onViewDragStateChanged(state);
             switch (state) {
                 case ViewDragHelper.STATE_IDLE:
-                    if (mDecorView.getLeft() == 0) {
+                    if (mScrollPercent == 0f) {
                         // State Open
                         if (mListener != null) mListener.onOpened();
                     } else {
@@ -208,7 +291,6 @@ public class SliderPanel extends FrameLayout {
         }
 
     };
-
 
     /**
      * Clamp Integer values to a given range
@@ -238,7 +320,7 @@ public class SliderPanel extends FrameLayout {
      * @param activity the activity to attach the slider to that allows
      *                 the user to lock/unlock the sliding mechanism for whatever purpose.
      */
-    public static void attach(final Activity activity) {
+    public static SliderPanel attach(final Activity activity) {
 
         // Hijack the decorview
         ViewGroup decorView = (ViewGroup) activity.getWindow().getDecorView();
@@ -263,5 +345,6 @@ public class SliderPanel extends FrameLayout {
             public void onOpened() {
             }
         });
+        return panel;
     }
 }
