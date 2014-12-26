@@ -1,6 +1,8 @@
 COCO-Accessory
 ==============
 
+[![Build Status](https://travis-ci.org/soarcn/COCO-Accessory.svg)](https://travis-ci.org/soarcn/COCO-Accessory)
+
 This project provides sets of collection of source codes, utilities and snippets for Android developemnt.
 
 There are 3 sub-modules, and you could use each or all of them together base on your real needs.  
