@@ -132,7 +132,6 @@ public abstract class MultiTypeAdapter extends TypeAdapter {
         for (Object item : items)
             this.items.add(new Item(type, item));
 
-        notifyDataSetChanged();
         return this;
     }
 
@@ -150,7 +149,6 @@ public abstract class MultiTypeAdapter extends TypeAdapter {
         for (Object item : items)
             this.items.add(new Item(type, item));
 
-        notifyDataSetChanged();
         return this;
     }
 
@@ -161,9 +159,8 @@ public abstract class MultiTypeAdapter extends TypeAdapter {
      * @return this adapter
      */
     public MultiTypeAdapter removeItem(final int position) {
-        if (position > 0 && position < items.size()
-                && items.remove(position) != null)
-            notifyDataSetChanged();
+        if (position >= 0 && position < items.size())
+            items.remove(position);
         return this;
     }
 

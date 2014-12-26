@@ -1,12 +1,14 @@
 package com.cocosw.accessory.views.widgets;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 
+import com.cocosw.accessory.view.R;
 import com.cocosw.accessory.views.Colour;
 import com.cocosw.accessory.views.foreground.ForegroundImageView;
 
@@ -18,31 +20,38 @@ import com.cocosw.accessory.views.foreground.ForegroundImageView;
  */
 public class BackdropImageView extends ForegroundImageView {
 
-    private static final int MIN_SCRIM_ALPHA = 20;
-    private static final int MAX_SCRIM_ALPHA = 180;
-    private static final int SCRIM_ALPHA_DIFF = MAX_SCRIM_ALPHA - MIN_SCRIM_ALPHA;
+    private static int MIN_SCRIM_ALPHA;
+    private static int MAX_SCRIM_ALPHA;
+    private static int SCRIM_ALPHA_DIFF;
 
     private float mScrimDarkness;
-    private int mScrimColor = Color.TRANSPARENT;
+    private int mScrimColor;
     private int mScrollOffset;
     private int mImageOffset;
 
     private final Paint mScrimPaint;
 
-    private boolean scrimEnable = false;
+    private float friction = 0.5f;
+    private int scrimOffset;
 
     public BackdropImageView(Context context, AttributeSet attrs) {
         super(context, attrs);
         mScrimPaint = new Paint();
+        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.BackdropImageView);
+        mScrimColor = a.getColor(R.styleable.BackdropImageView_scrimColor, Color.BLACK);
+        MIN_SCRIM_ALPHA = a.getInteger(R.styleable.BackdropImageView_minScrim, 20);
+        MAX_SCRIM_ALPHA = a.getInteger(R.styleable.BackdropImageView_maxScrim, 255);
+        friction = a.getFloat(R.styleable.BackdropImageView_friction, 0.5f);
+        SCRIM_ALPHA_DIFF = MAX_SCRIM_ALPHA - MIN_SCRIM_ALPHA;
+        a.recycle();
     }
 
     public void setScrollOffset(int offset) {
         if (offset != mScrollOffset) {
             mScrollOffset = offset;
-            mImageOffset = -offset / 2;
-            mScrimDarkness = Math.abs(offset / (float) getHeight());
+            mImageOffset = (int) (-offset * friction);
+            mScrimDarkness = Math.abs(offset / (float) (getHeight() - scrimOffset));
             offsetTopAndBottom(offset - getTop());
-
             ViewCompat.postInvalidateOnAnimation(this);
         }
     }
@@ -61,6 +70,15 @@ public class BackdropImageView extends ForegroundImageView {
             mScrimColor = scrimColor;
             ViewCompat.postInvalidateOnAnimation(this);
         }
+    }
+
+    public void setScrimOffset(int offset) {
+        this.scrimOffset = offset;
+    }
+
+    public void setOffsetFriction(float friction) {
+        if (friction <= 1 && friction > 0)
+            this.friction = friction;
     }
 
     @Override

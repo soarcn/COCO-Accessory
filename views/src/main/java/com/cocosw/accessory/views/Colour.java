@@ -119,9 +119,8 @@ public class Colour extends Color {
     }
 
 
-    public static int setColorAlpha(int color, float alpha) {
-        int alpha_int = Math.min(Math.max((int) (alpha * 255.0f), 0), 255);
-        return Color.argb(alpha_int, Color.red(color), Color.green(color), Color.blue(color));
+    public static int setColorAlpha(int color, int alpha) {
+        return (color & 0x00ffffff) | (alpha << 24);
     }
 
     public static int scaleColor(int color, float factor, boolean scaleAlpha) {
