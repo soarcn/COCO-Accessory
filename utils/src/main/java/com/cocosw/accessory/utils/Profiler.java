@@ -57,7 +57,7 @@ public class Profiler {
         IntentFilter ifilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
         Intent batteryStatus = context.getApplicationContext().registerReceiver(null, ifilter);
 
-        Hashtable<String, String> data = new Hashtable<String, String>();
+        Hashtable<String, String> data = new Hashtable<>();
 
         int status = batteryStatus.getIntExtra(BatteryManager.EXTRA_STATUS,
                 -1);

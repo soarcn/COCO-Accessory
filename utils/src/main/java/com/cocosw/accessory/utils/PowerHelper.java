@@ -30,6 +30,8 @@ public class PowerHelper {
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Intent.ACTION_BATTERY_LOW);
         intentFilter.addAction(Intent.ACTION_BATTERY_OKAY);
+        intentFilter.addAction(Intent.ACTION_POWER_CONNECTED);
+        intentFilter.addAction(Intent.ACTION_POWER_DISCONNECTED);
         return intentFilter;
     }
 
@@ -49,6 +51,10 @@ public class PowerHelper {
         void batteryLow();
 
         void batteryOK();
+
+        void connected();
+
+        void disconnected();
     }
 
     private PowerInfo powerinfo;
@@ -65,8 +71,12 @@ public class PowerHelper {
             if (generalinfo != null) {
                 boolean batteryLow = intent.getAction().equals(Intent.ACTION_BATTERY_LOW);
                 boolean batteryOK = intent.getAction().equals(Intent.ACTION_BATTERY_OKAY);
+                boolean connected = intent.getAction().equals(Intent.ACTION_POWER_CONNECTED);
+                boolean disconnected = intent.getAction().equals(Intent.ACTION_POWER_DISCONNECTED);
                 if (batteryLow) generalinfo.batteryLow();
                 if (batteryOK) generalinfo.batteryOK();
+                if (connected) generalinfo.connected();
+                if (disconnected) generalinfo.disconnected();
             }
         }
 
