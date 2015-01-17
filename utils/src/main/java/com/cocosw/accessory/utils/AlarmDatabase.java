@@ -11,7 +11,10 @@ import android.os.Handler;
 import android.util.Log;
 
 import java.io.Closeable;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Helper class provides interoperability with Android AlarmClock database.
@@ -146,6 +149,26 @@ public class AlarmDatabase implements Closeable {
         });
     }
 
+    public List<Record> getAllAlarm() {
+        final Cursor cur = mContentResolver.query(
+                ALARM_URI,
+                null,
+                "enabled=?",
+                new String[]{"1"},
+                null);
+
+        if (cur == null) {
+            return Collections.EMPTY_LIST;
+        }
+
+        ArrayList<Record> result = new ArrayList<>();
+        while (cur.moveToNext()) {
+            result.add(new Record(cur));
+        }
+        cur.close();
+        return result;
+    }
+
     /**
      * Creates database connection and subscribes for updates
      *
@@ -245,7 +268,7 @@ public class AlarmDatabase implements Closeable {
 
         int addDays = getNextAlarm(c, daysOfWeek);
         /* Log.v("** TIMES * " + c.getTimeInMillis() + " hour " + hour +
-				   " minute " + minute + " dow " + c.get(Calendar.DAY_OF_WEEK) + " from now " +
+                   " minute " + minute + " dow " + c.get(Calendar.DAY_OF_WEEK) + " from now " +
 				   addDays); */
         if (addDays > 0) c.add(Calendar.DAY_OF_WEEK, addDays);
         return c;
