@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.cocosw.accessory.views.adapter;
+package com.cocosw.adapter;
 
 import android.app.Activity;
 import android.content.Context;
@@ -21,42 +21,58 @@ import android.view.LayoutInflater;
 import android.widget.SectionIndexer;
 
 /**
- * @param <V>
+ * Type adapter with section indexing according to English alphabet
  */
-public abstract class SectionSingleTypeAdapter<V> extends SingleTypeAdapter<V>
+public abstract class SectionMultiTypeAdapter extends MultiTypeAdapter
         implements SectionIndexer {
 
     private final SectionFinder sections = new SectionFinder();
 
     /**
      * @param activity
-     * @param layoutResourceId
      */
-    public SectionSingleTypeAdapter(Activity activity, int layoutResourceId) {
-        super(activity, layoutResourceId);
+    public SectionMultiTypeAdapter(final Activity activity) {
+        super(activity);
     }
 
     /**
      * @param context
-     * @param layoutResourceId
      */
-    public SectionSingleTypeAdapter(Context context, int layoutResourceId) {
-        super(context, layoutResourceId);
+    public SectionMultiTypeAdapter(final Context context) {
+        super(context);
     }
 
     /**
      * @param inflater
-     * @param layoutResourceId
      */
-    public SectionSingleTypeAdapter(LayoutInflater inflater, int layoutResourceId) {
-        super(inflater, layoutResourceId);
+    public SectionMultiTypeAdapter(final LayoutInflater inflater) {
+        super(inflater);
     }
 
     @Override
-    public void setItems(Object[] items) {
-        super.setItems(items);
+    public MultiTypeAdapter clear() {
+        sections.clear();
 
-        sections.clear().index(items);
+        return super.clear();
+    }
+
+    /**
+     * Add items mapped to given letter
+     *
+     * @param sectionType
+     * @param section
+     * @param itemType
+     * @param items
+     * @return this adapter
+     */
+    public SectionMultiTypeAdapter addItems(final int sectionType,
+                                            final Object section, final int itemType, final Object[] items) {
+        sections.add(section, section).add(section, items);
+
+        super.addItem(sectionType, section);
+        super.addItems(itemType, items);
+
+        return this;
     }
 
     public int getPositionForSection(int section) {

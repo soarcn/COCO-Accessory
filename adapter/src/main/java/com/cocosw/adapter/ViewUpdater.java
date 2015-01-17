@@ -13,23 +13,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.cocosw.accessory.views.adapter;
+package com.cocosw.adapter;
 
+import android.text.TextUtils;
+import android.text.format.DateUtils;
 import android.view.View;
-import android.widget.BaseAdapter;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.text.NumberFormat;
+
 /**
- * Base adapter
+ * Updater for child views indexed from a root view
  */
-public abstract class TypeAdapter extends BaseAdapter {
+public class ViewUpdater {
 
     /**
-     * Updater for current view
+     * Number formatter for integers
      */
-    protected final ViewUpdater updater = new ViewUpdater();
+    public static final NumberFormat FORMAT_INT = NumberFormat
+            .getIntegerInstance();
+
+    /**
+     * Root view currently being updated
+     */
+    public View view;
+
+    /**
+     * Child views currently being updated
+     */
+    public View[] childViews;
 
     /**
      * Initialize view by binding indexed child views to tags on the root view
@@ -40,8 +54,14 @@ public abstract class TypeAdapter extends BaseAdapter {
      * @param children
      * @return view
      */
-    protected View initialize(final View view, final int[] children) {
-        return updater.initialize(view, children);
+    public View initialize(final View view, final int[] children) {
+        final View[] views = new View[children.length];
+        for (int i = 0; i < children.length; i++)
+            views[i] = view.findViewById(children[i]);
+        view.setTag(views);
+        this.view = view;
+        childViews = views;
+        return view;
     }
 
     /**
@@ -49,8 +69,9 @@ public abstract class TypeAdapter extends BaseAdapter {
      *
      * @param view
      */
-    protected void setCurrentView(final View view) {
-        updater.setCurrentView(view);
+    public void setCurrentView(final View view) {
+        this.view = view;
+        childViews = getChildren(view);
     }
 
     /**
@@ -59,8 +80,8 @@ public abstract class TypeAdapter extends BaseAdapter {
      * @param parentView
      * @return children
      */
-    protected View[] getChildren(final View parentView) {
-        return updater.getChildren(parentView);
+    public View[] getChildren(final View parentView) {
+        return (View[]) parentView.getTag();
     }
 
     /**
@@ -69,8 +90,8 @@ public abstract class TypeAdapter extends BaseAdapter {
      * @param childViewIndex
      * @return text view
      */
-    protected TextView textView(final int childViewIndex) {
-        return updater.textView(childViewIndex);
+    public TextView textView(final int childViewIndex) {
+        return (TextView) childViews[childViewIndex];
     }
 
     /**
@@ -80,8 +101,8 @@ public abstract class TypeAdapter extends BaseAdapter {
      * @param childViewIndex
      * @return text view
      */
-    protected TextView textView(final View parentView, final int childViewIndex) {
-        return updater.textView(parentView, childViewIndex);
+    public TextView textView(final View parentView, final int childViewIndex) {
+        return (TextView) getChildren(parentView)[childViewIndex];
     }
 
     /**
@@ -90,8 +111,8 @@ public abstract class TypeAdapter extends BaseAdapter {
      * @param childViewIndex
      * @return image view
      */
-    protected ImageView imageView(final int childViewIndex) {
-        return updater.imageView(childViewIndex);
+    public ImageView imageView(final int childViewIndex) {
+        return (ImageView) childViews[childViewIndex];
     }
 
     /**
@@ -101,8 +122,8 @@ public abstract class TypeAdapter extends BaseAdapter {
      * @param childViewIndex
      * @return image view
      */
-    protected ImageView imageView(final View parentView, final int childViewIndex) {
-        return updater.imageView(parentView, childViewIndex);
+    public ImageView imageView(final View parentView, final int childViewIndex) {
+        return (ImageView) getChildren(parentView)[childViewIndex];
     }
 
     /**
@@ -111,8 +132,9 @@ public abstract class TypeAdapter extends BaseAdapter {
      * @param childViewIndex
      * @return view
      */
-    protected <V extends View> V view(final int childViewIndex) {
-        return updater.view(childViewIndex);
+    @SuppressWarnings("unchecked")
+    public <V extends View> V view(final int childViewIndex) {
+        return (V) childViews[childViewIndex];
     }
 
     /**
@@ -122,9 +144,10 @@ public abstract class TypeAdapter extends BaseAdapter {
      * @param childViewIndex
      * @return view
      */
-    protected <V extends View> V view(final View parentView,
-                                      final int childViewIndex) {
-        return updater.view(parentView, childViewIndex);
+    @SuppressWarnings("unchecked")
+    public <V extends View> V view(final View parentView,
+                                   final int childViewIndex) {
+        return (V) getChildren(parentView)[childViewIndex];
     }
 
     /**
@@ -134,8 +157,10 @@ public abstract class TypeAdapter extends BaseAdapter {
      * @param text
      * @return text view
      */
-    protected TextView setText(final int childViewIndex, final CharSequence text) {
-        return updater.setText(childViewIndex, text);
+    public TextView setText(final int childViewIndex, final CharSequence text) {
+        final TextView textView = textView(childViewIndex);
+        textView.setText(text);
+        return textView;
     }
 
     /**
@@ -146,9 +171,11 @@ public abstract class TypeAdapter extends BaseAdapter {
      * @param text
      * @return text view
      */
-    protected TextView setText(final View parentView, final int childViewIndex,
-                               final CharSequence text) {
-        return updater.setText(parentView, childViewIndex, text);
+    public TextView setText(final View parentView, final int childViewIndex,
+                            final CharSequence text) {
+        final TextView textView = textView(parentView, childViewIndex);
+        textView.setText(text);
+        return textView;
     }
 
     /**
@@ -158,8 +185,10 @@ public abstract class TypeAdapter extends BaseAdapter {
      * @param resourceId
      * @return text view
      */
-    protected TextView setText(final int childViewIndex, final int resourceId) {
-        return updater.setText(childViewIndex, resourceId);
+    public TextView setText(final int childViewIndex, final int resourceId) {
+        final TextView textView = textView(childViewIndex);
+        textView.setText(resourceId);
+        return textView;
     }
 
     /**
@@ -170,9 +199,11 @@ public abstract class TypeAdapter extends BaseAdapter {
      * @param resourceId
      * @return text view
      */
-    protected TextView setText(final View parentView, final int childViewIndex,
-                               final int resourceId) {
-        return updater.setText(parentView, childViewIndex, resourceId);
+    public TextView setText(final View parentView, final int childViewIndex,
+                            final int resourceId) {
+        final TextView textView = textView(parentView, childViewIndex);
+        textView.setText(resourceId);
+        return textView;
     }
 
     /**
@@ -185,8 +216,10 @@ public abstract class TypeAdapter extends BaseAdapter {
      * @param number
      * @return text view
      */
-    protected TextView setNumber(final int childViewIndex, final long number) {
-        return updater.setNumber(childViewIndex, number);
+    public TextView setNumber(final int childViewIndex, final long number) {
+        final TextView textView = textView(childViewIndex);
+        textView.setText(FORMAT_INT.format(number));
+        return textView;
     }
 
     /**
@@ -200,9 +233,11 @@ public abstract class TypeAdapter extends BaseAdapter {
      * @param number
      * @return text view
      */
-    protected TextView setNumber(final View parentView, final int childViewIndex,
-                                 final long number) {
-        return updater.setNumber(parentView, childViewIndex, number);
+    public TextView setNumber(final View parentView, final int childViewIndex,
+                              final long number) {
+        final TextView textView = textView(parentView, childViewIndex);
+        textView.setText(FORMAT_INT.format(number));
+        return textView;
     }
 
     /**
@@ -212,9 +247,10 @@ public abstract class TypeAdapter extends BaseAdapter {
      * @param childViewClass
      * @return child view
      */
-    protected <T> T getView(final int childViewIndex,
-                            final Class<T> childViewClass) {
-        return updater.getView(childViewIndex, childViewClass);
+    @SuppressWarnings("unchecked")
+    public <T> T getView(final int childViewIndex,
+                         final Class<T> childViewClass) {
+        return (T) childViews[childViewIndex];
     }
 
     /**
@@ -225,9 +261,10 @@ public abstract class TypeAdapter extends BaseAdapter {
      * @param childViewClass
      * @return child view
      */
-    protected <T> T getView(final View parentView, final int childViewIndex,
-                            final Class<T> childViewClass) {
-        return updater.getView(parentView, childViewIndex, childViewClass);
+    @SuppressWarnings("unchecked")
+    public <T> T getView(final View parentView, final int childViewIndex,
+                         final Class<T> childViewClass) {
+        return (T) getChildren(parentView)[childViewIndex];
     }
 
     /**
@@ -237,8 +274,8 @@ public abstract class TypeAdapter extends BaseAdapter {
      * @param gone
      * @return child view
      */
-    protected View setGone(final int childViewIndex, boolean gone) {
-        return updater.setGone(childViewIndex, gone);
+    public View setGone(final int childViewIndex, boolean gone) {
+        return ViewUtils.setGone(view(childViewIndex), gone);
     }
 
     /**
@@ -249,9 +286,9 @@ public abstract class TypeAdapter extends BaseAdapter {
      * @param gone
      * @return child view
      */
-    protected View setGone(final View parentView, final int childViewIndex,
-                           boolean gone) {
-        return updater.setGone(parentView, childViewIndex, gone);
+    public View setGone(final View parentView, final int childViewIndex,
+                        boolean gone) {
+        return ViewUtils.setGone(view(parentView, childViewIndex), gone);
     }
 
     /**
@@ -261,9 +298,11 @@ public abstract class TypeAdapter extends BaseAdapter {
      * @param checked
      * @return check box
      */
-    protected CompoundButton setChecked(final int childViewIndex,
-                                        final boolean checked) {
-        return updater.setChecked(childViewIndex, checked);
+    public CompoundButton setChecked(final int childViewIndex,
+                                     final boolean checked) {
+        final CompoundButton button = view(childViewIndex);
+        button.setChecked(checked);
+        return button;
     }
 
     /**
@@ -274,9 +313,11 @@ public abstract class TypeAdapter extends BaseAdapter {
      * @param checked
      * @return check box
      */
-    protected CompoundButton setChecked(final View parentView,
-                                        final int childViewIndex, final boolean checked) {
-        return updater.setChecked(parentView, childViewIndex, checked);
+    public CompoundButton setChecked(final View parentView,
+                                     final int childViewIndex, final boolean checked) {
+        final CompoundButton button = view(parentView, childViewIndex);
+        button.setChecked(checked);
+        return button;
     }
 
     /**
@@ -289,7 +330,10 @@ public abstract class TypeAdapter extends BaseAdapter {
      */
     public TextView setVisibleText(final int childViewIndex,
                                    final CharSequence text) {
-        return updater.setVisibleText(childViewIndex, text);
+        TextView view = textView(childViewIndex);
+        view.setText(text);
+        ViewUtils.setGone(view, TextUtils.isEmpty(text));
+        return view;
     }
 
     /**
@@ -303,7 +347,14 @@ public abstract class TypeAdapter extends BaseAdapter {
      */
     public TextView setVisibleText(final View parentView,
                                    final int childViewIndex, final CharSequence text) {
-        return updater.setVisibleText(parentView, childViewIndex, text);
+        TextView view = textView(parentView, childViewIndex);
+        view.setText(text);
+        ViewUtils.setGone(view, TextUtils.isEmpty(text));
+        return view;
+    }
+
+    private CharSequence formatRelativeTimeSpan(final long time) {
+        return DateUtils.getRelativeTimeSpanString(time);
     }
 
     /**
@@ -314,7 +365,7 @@ public abstract class TypeAdapter extends BaseAdapter {
      * @return text view
      */
     public TextView setRelativeTimeSpan(final int childViewIndex, final long time) {
-        return updater.setRelativeTimeSpan(childViewIndex, time);
+        return setText(childViewIndex, formatRelativeTimeSpan(time));
     }
 
     /**
@@ -327,6 +378,6 @@ public abstract class TypeAdapter extends BaseAdapter {
      */
     public TextView setRelativeTimeSpan(final View parentView,
                                         final int childViewIndex, final long time) {
-        return updater.setRelativeTimeSpan(parentView, childViewIndex, time);
+        return setText(parentView, childViewIndex, formatRelativeTimeSpan(time));
     }
 }

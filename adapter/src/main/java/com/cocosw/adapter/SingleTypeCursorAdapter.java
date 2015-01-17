@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.cocosw.accessory.views.adapter;
+package com.cocosw.adapter;
 
 import android.app.Activity;
 import android.content.Context;
@@ -38,6 +38,7 @@ public abstract class SingleTypeCursorAdapter extends CursorAdapter {
      * Current cursor being binded to
      */
     protected Cursor cursor;
+
 
     /**
      * Create adapter
@@ -99,6 +100,13 @@ public abstract class SingleTypeCursorAdapter extends CursorAdapter {
     protected abstract int[] getChildViewIds();
 
     /**
+     * Update item
+     *
+     * @param cursor
+     */
+    protected abstract void update(Cursor cursor);
+
+    /**
      * Initialize view
      *
      * @param view
@@ -112,6 +120,7 @@ public abstract class SingleTypeCursorAdapter extends CursorAdapter {
     public void bindView(View view, Context context, Cursor cursor) {
         updater.setCurrentView(view);
         this.cursor = cursor;
+        update(cursor);
     }
 
     @Override

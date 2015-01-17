@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.cocosw.accessory.views.adapter;
+package com.cocosw.adapter;
 
 import android.app.Activity;
 import android.content.Context;
@@ -28,7 +28,7 @@ import java.util.List;
 /**
  * Adapter for lists where only multiple view types are needed
  */
-public abstract class MultiTypeAdapter extends TypeAdapter {
+public abstract class MultiTypeAdapter<V> extends TypeAdapter {
 
     private static class Item {
 
@@ -111,10 +111,8 @@ public abstract class MultiTypeAdapter extends TypeAdapter {
      * @param item
      * @return this adapter
      */
-    public MultiTypeAdapter addItem(final int type, final Object item) {
+    public MultiTypeAdapter addItem(final int type, final V item) {
         items.add(new Item(type, item));
-
-        notifyDataSetChanged();
         return this;
     }
 
@@ -125,7 +123,7 @@ public abstract class MultiTypeAdapter extends TypeAdapter {
      * @param items
      * @return this adapter
      */
-    public MultiTypeAdapter addItems(final int type, final Object[] items) {
+    public MultiTypeAdapter addItems(final int type, final V[] items) {
         if (items == null || items.length == 0)
             return this;
 
@@ -189,8 +187,8 @@ public abstract class MultiTypeAdapter extends TypeAdapter {
     }
 
     @Override
-    public Object getItem(final int position) {
-        return items.get(position).item;
+    public V getItem(final int position) {
+        return (V) items.get(position).item;
     }
 
     @Override
@@ -211,7 +209,7 @@ public abstract class MultiTypeAdapter extends TypeAdapter {
      * @param item
      * @param type
      */
-    protected void update(final int position, final View view, final Object item,
+    protected void update(final int position, final View view, final V item,
                           final int type) {
         setCurrentView(view);
         update(position, item, type);

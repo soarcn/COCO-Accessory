@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.cocosw.accessory.views.adapter;
+package com.cocosw.adapter;
 
 import android.content.Context;
 import android.database.Cursor;

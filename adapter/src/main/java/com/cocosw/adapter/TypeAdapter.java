@@ -13,39 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.cocosw.accessory.views.adapter;
+package com.cocosw.adapter;
 
-import android.text.TextUtils;
-import android.text.format.DateUtils;
 import android.view.View;
+import android.widget.BaseAdapter;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.cocosw.accessory.views.ViewUtils;
-
-import java.text.NumberFormat;
-
 /**
- * Updater for child views indexed from a root view
+ * Base adapter
  */
-public class ViewUpdater {
+public abstract class TypeAdapter extends BaseAdapter {
 
     /**
-     * Number formatter for integers
+     * Updater for current view
      */
-    public static final NumberFormat FORMAT_INT = NumberFormat
-            .getIntegerInstance();
-
-    /**
-     * Root view currently being updated
-     */
-    public View view;
-
-    /**
-     * Child views currently being updated
-     */
-    public View[] childViews;
+    protected final ViewUpdater updater = new ViewUpdater();
 
     /**
      * Initialize view by binding indexed child views to tags on the root view
@@ -56,14 +40,8 @@ public class ViewUpdater {
      * @param children
      * @return view
      */
-    public View initialize(final View view, final int[] children) {
-        final View[] views = new View[children.length];
-        for (int i = 0; i < children.length; i++)
-            views[i] = view.findViewById(children[i]);
-        view.setTag(views);
-        this.view = view;
-        childViews = views;
-        return view;
+    protected View initialize(final View view, final int[] children) {
+        return updater.initialize(view, children);
     }
 
     /**
@@ -71,9 +49,8 @@ public class ViewUpdater {
      *
      * @param view
      */
-    public void setCurrentView(final View view) {
-        this.view = view;
-        childViews = getChildren(view);
+    protected void setCurrentView(final View view) {
+        updater.setCurrentView(view);
     }
 
     /**
@@ -82,8 +59,8 @@ public class ViewUpdater {
      * @param parentView
      * @return children
      */
-    public View[] getChildren(final View parentView) {
-        return (View[]) parentView.getTag();
+    protected View[] getChildren(final View parentView) {
+        return updater.getChildren(parentView);
     }
 
     /**
@@ -92,8 +69,8 @@ public class ViewUpdater {
      * @param childViewIndex
      * @return text view
      */
-    public TextView textView(final int childViewIndex) {
-        return (TextView) childViews[childViewIndex];
+    protected TextView textView(final int childViewIndex) {
+        return updater.textView(childViewIndex);
     }
 
     /**
@@ -103,8 +80,8 @@ public class ViewUpdater {
      * @param childViewIndex
      * @return text view
      */
-    public TextView textView(final View parentView, final int childViewIndex) {
-        return (TextView) getChildren(parentView)[childViewIndex];
+    protected TextView textView(final View parentView, final int childViewIndex) {
+        return updater.textView(parentView, childViewIndex);
     }
 
     /**
@@ -113,8 +90,8 @@ public class ViewUpdater {
      * @param childViewIndex
      * @return image view
      */
-    public ImageView imageView(final int childViewIndex) {
-        return (ImageView) childViews[childViewIndex];
+    protected ImageView imageView(final int childViewIndex) {
+        return updater.imageView(childViewIndex);
     }
 
     /**
@@ -124,8 +101,8 @@ public class ViewUpdater {
      * @param childViewIndex
      * @return image view
      */
-    public ImageView imageView(final View parentView, final int childViewIndex) {
-        return (ImageView) getChildren(parentView)[childViewIndex];
+    protected ImageView imageView(final View parentView, final int childViewIndex) {
+        return updater.imageView(parentView, childViewIndex);
     }
 
     /**
@@ -134,9 +111,8 @@ public class ViewUpdater {
      * @param childViewIndex
      * @return view
      */
-    @SuppressWarnings("unchecked")
-    public <V extends View> V view(final int childViewIndex) {
-        return (V) childViews[childViewIndex];
+    protected <V extends View> V view(final int childViewIndex) {
+        return updater.view(childViewIndex);
     }
 
     /**
@@ -146,10 +122,9 @@ public class ViewUpdater {
      * @param childViewIndex
      * @return view
      */
-    @SuppressWarnings("unchecked")
-    public <V extends View> V view(final View parentView,
-                                   final int childViewIndex) {
-        return (V) getChildren(parentView)[childViewIndex];
+    protected <V extends View> V view(final View parentView,
+                                      final int childViewIndex) {
+        return updater.view(parentView, childViewIndex);
     }
 
     /**
@@ -159,10 +134,8 @@ public class ViewUpdater {
      * @param text
      * @return text view
      */
-    public TextView setText(final int childViewIndex, final CharSequence text) {
-        final TextView textView = textView(childViewIndex);
-        textView.setText(text);
-        return textView;
+    protected TextView setText(final int childViewIndex, final CharSequence text) {
+        return updater.setText(childViewIndex, text);
     }
 
     /**
@@ -173,11 +146,9 @@ public class ViewUpdater {
      * @param text
      * @return text view
      */
-    public TextView setText(final View parentView, final int childViewIndex,
-                            final CharSequence text) {
-        final TextView textView = textView(parentView, childViewIndex);
-        textView.setText(text);
-        return textView;
+    protected TextView setText(final View parentView, final int childViewIndex,
+                               final CharSequence text) {
+        return updater.setText(parentView, childViewIndex, text);
     }
 
     /**
@@ -187,10 +158,8 @@ public class ViewUpdater {
      * @param resourceId
      * @return text view
      */
-    public TextView setText(final int childViewIndex, final int resourceId) {
-        final TextView textView = textView(childViewIndex);
-        textView.setText(resourceId);
-        return textView;
+    protected TextView setText(final int childViewIndex, final int resourceId) {
+        return updater.setText(childViewIndex, resourceId);
     }
 
     /**
@@ -201,11 +170,9 @@ public class ViewUpdater {
      * @param resourceId
      * @return text view
      */
-    public TextView setText(final View parentView, final int childViewIndex,
-                            final int resourceId) {
-        final TextView textView = textView(parentView, childViewIndex);
-        textView.setText(resourceId);
-        return textView;
+    protected TextView setText(final View parentView, final int childViewIndex,
+                               final int resourceId) {
+        return updater.setText(parentView, childViewIndex, resourceId);
     }
 
     /**
@@ -218,10 +185,8 @@ public class ViewUpdater {
      * @param number
      * @return text view
      */
-    public TextView setNumber(final int childViewIndex, final long number) {
-        final TextView textView = textView(childViewIndex);
-        textView.setText(FORMAT_INT.format(number));
-        return textView;
+    protected TextView setNumber(final int childViewIndex, final long number) {
+        return updater.setNumber(childViewIndex, number);
     }
 
     /**
@@ -235,11 +200,9 @@ public class ViewUpdater {
      * @param number
      * @return text view
      */
-    public TextView setNumber(final View parentView, final int childViewIndex,
-                              final long number) {
-        final TextView textView = textView(parentView, childViewIndex);
-        textView.setText(FORMAT_INT.format(number));
-        return textView;
+    protected TextView setNumber(final View parentView, final int childViewIndex,
+                                 final long number) {
+        return updater.setNumber(parentView, childViewIndex, number);
     }
 
     /**
@@ -249,10 +212,9 @@ public class ViewUpdater {
      * @param childViewClass
      * @return child view
      */
-    @SuppressWarnings("unchecked")
-    public <T> T getView(final int childViewIndex,
-                         final Class<T> childViewClass) {
-        return (T) childViews[childViewIndex];
+    protected <T> T getView(final int childViewIndex,
+                            final Class<T> childViewClass) {
+        return updater.getView(childViewIndex, childViewClass);
     }
 
     /**
@@ -263,10 +225,9 @@ public class ViewUpdater {
      * @param childViewClass
      * @return child view
      */
-    @SuppressWarnings("unchecked")
-    public <T> T getView(final View parentView, final int childViewIndex,
-                         final Class<T> childViewClass) {
-        return (T) getChildren(parentView)[childViewIndex];
+    protected <T> T getView(final View parentView, final int childViewIndex,
+                            final Class<T> childViewClass) {
+        return updater.getView(parentView, childViewIndex, childViewClass);
     }
 
     /**
@@ -276,8 +237,8 @@ public class ViewUpdater {
      * @param gone
      * @return child view
      */
-    public View setGone(final int childViewIndex, boolean gone) {
-        return ViewUtils.setGone(view(childViewIndex), gone);
+    protected View setGone(final int childViewIndex, boolean gone) {
+        return updater.setGone(childViewIndex, gone);
     }
 
     /**
@@ -288,9 +249,9 @@ public class ViewUpdater {
      * @param gone
      * @return child view
      */
-    public View setGone(final View parentView, final int childViewIndex,
-                        boolean gone) {
-        return ViewUtils.setGone(view(parentView, childViewIndex), gone);
+    protected View setGone(final View parentView, final int childViewIndex,
+                           boolean gone) {
+        return updater.setGone(parentView, childViewIndex, gone);
     }
 
     /**
@@ -300,11 +261,9 @@ public class ViewUpdater {
      * @param checked
      * @return check box
      */
-    public CompoundButton setChecked(final int childViewIndex,
-                                     final boolean checked) {
-        final CompoundButton button = view(childViewIndex);
-        button.setChecked(checked);
-        return button;
+    protected CompoundButton setChecked(final int childViewIndex,
+                                        final boolean checked) {
+        return updater.setChecked(childViewIndex, checked);
     }
 
     /**
@@ -315,11 +274,9 @@ public class ViewUpdater {
      * @param checked
      * @return check box
      */
-    public CompoundButton setChecked(final View parentView,
-                                     final int childViewIndex, final boolean checked) {
-        final CompoundButton button = view(parentView, childViewIndex);
-        button.setChecked(checked);
-        return button;
+    protected CompoundButton setChecked(final View parentView,
+                                        final int childViewIndex, final boolean checked) {
+        return updater.setChecked(parentView, childViewIndex, checked);
     }
 
     /**
@@ -332,10 +289,7 @@ public class ViewUpdater {
      */
     public TextView setVisibleText(final int childViewIndex,
                                    final CharSequence text) {
-        TextView view = textView(childViewIndex);
-        view.setText(text);
-        ViewUtils.setGone(view, TextUtils.isEmpty(text));
-        return view;
+        return updater.setVisibleText(childViewIndex, text);
     }
 
     /**
@@ -349,14 +303,7 @@ public class ViewUpdater {
      */
     public TextView setVisibleText(final View parentView,
                                    final int childViewIndex, final CharSequence text) {
-        TextView view = textView(parentView, childViewIndex);
-        view.setText(text);
-        ViewUtils.setGone(view, TextUtils.isEmpty(text));
-        return view;
-    }
-
-    private CharSequence formatRelativeTimeSpan(final long time) {
-        return DateUtils.getRelativeTimeSpanString(time);
+        return updater.setVisibleText(parentView, childViewIndex, text);
     }
 
     /**
@@ -367,7 +314,7 @@ public class ViewUpdater {
      * @return text view
      */
     public TextView setRelativeTimeSpan(final int childViewIndex, final long time) {
-        return setText(childViewIndex, formatRelativeTimeSpan(time));
+        return updater.setRelativeTimeSpan(childViewIndex, time);
     }
 
     /**
@@ -380,6 +327,6 @@ public class ViewUpdater {
      */
     public TextView setRelativeTimeSpan(final View parentView,
                                         final int childViewIndex, final long time) {
-        return setText(parentView, childViewIndex, formatRelativeTimeSpan(time));
+        return updater.setRelativeTimeSpan(parentView, childViewIndex, time);
     }
 }

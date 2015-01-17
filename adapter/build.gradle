@@ -1,0 +1,9 @@
+apply from: 'https://raw.githubusercontent.com/soarcn/gradle/master/android-library.gradle'
+apply from: 'https://raw.githubusercontent.com/soarcn/gradle/master/maven_push.gradle'
+
+
+dependencies {
+    compile 'com.android.support:support-v4:21.+'
+    compile "com.android.support:recyclerview-v7:21.+"
+}
+

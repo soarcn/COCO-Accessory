@@ -13,66 +13,52 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.cocosw.accessory.views.adapter;
+package com.cocosw.adapter.recyclerview;
 
 import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.widget.SectionIndexer;
 
+import com.cocosw.adapter.SectionFinder;
+
 /**
- * Type adapter with section indexing according to English alphabet
+ * @param <V>
  */
-public abstract class SectionMultiTypeAdapter extends MultiTypeAdapter
+public abstract class SectionSingleTypeAdapter<V> extends SingleTypeAdapter<V>
         implements SectionIndexer {
 
     private final SectionFinder sections = new SectionFinder();
 
     /**
      * @param activity
+     * @param layoutResourceId
      */
-    public SectionMultiTypeAdapter(final Activity activity) {
-        super(activity);
+    public SectionSingleTypeAdapter(Activity activity, int layoutResourceId) {
+        super(activity, layoutResourceId);
     }
 
     /**
      * @param context
+     * @param layoutResourceId
      */
-    public SectionMultiTypeAdapter(final Context context) {
-        super(context);
+    public SectionSingleTypeAdapter(Context context, int layoutResourceId) {
+        super(context, layoutResourceId);
     }
 
     /**
      * @param inflater
+     * @param layoutResourceId
      */
-    public SectionMultiTypeAdapter(final LayoutInflater inflater) {
-        super(inflater);
+    public SectionSingleTypeAdapter(LayoutInflater inflater, int layoutResourceId) {
+        super(inflater, layoutResourceId);
     }
 
     @Override
-    public MultiTypeAdapter clear() {
-        sections.clear();
+    public void setItems(V[] items) {
+        super.setItems(items);
 
-        return super.clear();
-    }
-
-    /**
-     * Add items mapped to given letter
-     *
-     * @param sectionType
-     * @param section
-     * @param itemType
-     * @param items
-     * @return this adapter
-     */
-    public SectionMultiTypeAdapter addItems(final int sectionType,
-                                            final Object section, final int itemType, final Object[] items) {
-        sections.add(section, section).add(section, items);
-
-        super.addItem(sectionType, section);
-        super.addItems(itemType, items);
-
-        return this;
+        sections.clear().index(items);
     }
 
     public int getPositionForSection(int section) {

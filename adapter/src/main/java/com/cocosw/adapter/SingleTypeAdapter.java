@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.cocosw.accessory.views.adapter;
+package com.cocosw.adapter;
 
 import android.app.Activity;
 import android.content.Context;
@@ -21,6 +21,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -32,15 +33,13 @@ import java.util.List;
  */
 public abstract class SingleTypeAdapter<V> extends TypeAdapter {
 
-    private static final Object[] EMPTY = new Object[0];
-
     private final LayoutInflater inflater;
 
     private final int layout;
 
     private final int[] children;
 
-    private Object[] items;
+    private List<V> items;
 
     /**
      * Create adapter
@@ -73,7 +72,7 @@ public abstract class SingleTypeAdapter<V> extends TypeAdapter {
         this.inflater = inflater;
         this.layout = layoutResourceId;
 
-        items = EMPTY;
+        items = new ArrayList<>();
 
         int[] childIds = getChildViewIds();
         if (childIds == null)
@@ -86,10 +85,8 @@ public abstract class SingleTypeAdapter<V> extends TypeAdapter {
      *
      * @return list of all items
      */
-    @SuppressWarnings("unchecked")
     protected List<V> getItems() {
-        List<? extends Object> objList = Arrays.asList(items);
-        return (List<V>) objList;
+        return items;
     }
 
     /**
@@ -97,11 +94,11 @@ public abstract class SingleTypeAdapter<V> extends TypeAdapter {
      *
      * @param items
      */
-    public void setItems(final Collection<?> items) {
+    public void setItems(final Collection<V> items) {
         if (items != null && !items.isEmpty())
-            setItems(items.toArray());
+            this.items = new ArrayList<>(items);
         else
-            setItems(EMPTY);
+            this.items = new ArrayList<>();
     }
 
     /**
@@ -109,27 +106,38 @@ public abstract class SingleTypeAdapter<V> extends TypeAdapter {
      *
      * @param items
      */
-    public void setItems(final Object[] items) {
-        if (items != null)
+    public void setItems(final List<V> items) {
+        if (items != null && !items.isEmpty())
             this.items = items;
         else
-            this.items = EMPTY;
+            this.items = new ArrayList<>();
+    }
+
+    /**
+     * Set items to display
+     *
+     * @param items
+     */
+    public void setItems(final V[] items) {
+        if (items != null)
+            this.items = new ArrayList<>(Arrays.asList(items));
+        else
+            this.items = new ArrayList<>();
         notifyDataSetChanged();
     }
 
     @Override
     public int getCount() {
-        return items.length;
+        return items.size();
     }
 
-    @SuppressWarnings("unchecked")
     public V getItem(final int position) {
-        return (V) items[position];
+        return items.get(position);
     }
 
     @Override
     public long getItemId(final int position) {
-        return items[position].hashCode();
+        return getItem(position).hashCode();
     }
 
     /**
@@ -180,4 +188,5 @@ public abstract class SingleTypeAdapter<V> extends TypeAdapter {
         update(position, convertView, getItem(position));
         return convertView;
     }
+
 }
