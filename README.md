@@ -5,7 +5,7 @@ COCO-Accessory
 
 This project provides sets of collection of source codes, utilities and snippets for Android developemnt.
 
-There are 3 sub-modules, and you could use each or all of them together base on your real needs.  
+There are 4 sub-modules, and you could use each or all of them together base on your real needs.
  
 Please be aware that this project still under development, so classes and interface would be changed at any moment.
  
@@ -20,7 +20,13 @@ gradle config
     compile 'com.cocosw.accessory:views:+@aar' 
     compile 'com.cocosw.accessory:utils:+@aar' 
     ```
- 
+
+Adapter
+--------------
+
+
+
+
 Connectivity
 --------------
 
