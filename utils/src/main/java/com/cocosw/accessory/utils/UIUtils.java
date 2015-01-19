@@ -31,6 +31,7 @@ import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
+import android.os.Looper;
 import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
@@ -77,6 +78,10 @@ public class UIUtils {
         // beyond that allows you to recycle a StringBuilder.
         return DateUtils.formatDateRange(context, blockStart, blockEnd,
                 UIUtils.TIME_FLAGS);
+    }
+
+    public static boolean isMain() {
+        return Looper.getMainLooper().getThread() == Thread.currentThread();
     }
 
 
