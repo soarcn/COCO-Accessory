@@ -19,93 +19,93 @@ import java.util.WeakHashMap;
  */
 public class NetworkConnectivity {
 
-	private String ip;
-	private final Context context;
-	private final WeakHashMap<NetworkMonitorListener,Void> networkMonitorListeners = new WeakHashMap<NetworkMonitorListener,Void>();
-	private NetworkInfo networkInfo;
-	private boolean isWifi;
+    private String ip;
+    private final Context context;
+    private final WeakHashMap<NetworkMonitorListener, Void> networkMonitorListeners = new WeakHashMap<NetworkMonitorListener, Void>();
+    private NetworkInfo networkInfo;
+    private boolean isWifi;
     private static NetworkConnectivity instance;
     private BroadcastReceiver mNetworkStateIntentReceiver;
     private ConnectivityManager cm;
 
     private NetworkConnectivity(final Context ctx) {
-		context = ctx;
-		networkInfo = null;
+        context = ctx;
+        networkInfo = null;
         cm = (ConnectivityManager) context
                 .getSystemService(Context.CONNECTIVITY_SERVICE);
-		refresh(null);
+        refresh(null);
         start();
-	}
+    }
 
 
     public static NetworkConnectivity getInstance(final Context ctx) {
         if (instance == null)
-             instance = new NetworkConnectivity(ctx);
+            instance = new NetworkConnectivity(ctx);
         return instance;
     }
 
     public static NetworkConnectivity getInstance() {
-        if(instance==null)
+        if (instance == null)
             throw new IllegalAccessError("InitConnectivity fist");
         return instance;
     }
 
-	public void addNetworkMonitorListener(final NetworkMonitorListener l) {
-		networkMonitorListeners.put(l,null);
-		notifyNetworkMonitorListener(l);
-	}
+    public void addNetworkMonitorListener(final NetworkMonitorListener l) {
+        networkMonitorListeners.put(l, null);
+        notifyNetworkMonitorListener(l);
+    }
 
-	public void removeNetworkMonitorListener(final NetworkMonitorListener l) {
-		networkMonitorListeners.remove(l);
-	}
+    public void removeNetworkMonitorListener(final NetworkMonitorListener l) {
+        networkMonitorListeners.remove(l);
+    }
 
-	/**
-	 * A synchronous call to check if network connectivity exists.
-	 * 
-	 * @return {@true} if network is connected, {@false} otherwise.
-	 */
-	public boolean isConnected() {
-		if (networkInfo != null
-				&& networkInfo.isConnected()) {
-			return true;
-		} else {
-			return false;
-		}
-	}
+    /**
+     * A synchronous call to check if network connectivity exists.
+     *
+     * @return {@true} if network is connected, {@false} otherwise.
+     */
+    public boolean isConnected() {
+        if (networkInfo != null
+                && networkInfo.isConnected()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
-	/**
-	 * get instance network connectivity status
-	 * 
-	 * @return
-	 */
-	public boolean checkConnected() {
-		refresh(null);
-		return isConnected();
-	}
+    /**
+     * get instance network connectivity status
+     *
+     * @return
+     */
+    public boolean checkConnected() {
+        refresh(null);
+        return isConnected();
+    }
 
-	private void notifyNetworkMonitorListener(final NetworkMonitorListener l) {
-		if (networkInfo == null) {
-			l.connectionLost();
-			return;
-		}
-		if (networkInfo.isConnected()) {
-			l.connectionEstablished();
-		} else if (networkInfo.isConnectedOrConnecting()) {
-			l.connectionCheckInProgress();
-		} else {
-			l.connectionLost();
-		}
-	}
+    private void notifyNetworkMonitorListener(final NetworkMonitorListener l) {
+        if (networkInfo == null) {
+            l.connectionLost();
+            return;
+        }
+        if (networkInfo.isConnected()) {
+            l.connectionEstablished();
+        } else if (networkInfo.isConnectedOrConnecting()) {
+            l.connectionCheckInProgress();
+        } else {
+            l.connectionLost();
+        }
+    }
 
-	private void notifyNetworkMonitorListeners() {
+    private void notifyNetworkMonitorListeners() {
         Iterator<NetworkMonitorListener> keys = networkMonitorListeners.keySet().iterator();
 
-        while(keys.hasNext()){
+        while (keys.hasNext()) {
             NetworkMonitorListener d = keys.next();
-            if (d!=null)
-            notifyNetworkMonitorListener(d);
+            if (d != null)
+                notifyNetworkMonitorListener(d);
         }
-	}
+    }
 
     /**
      * Get network info instance
@@ -118,88 +118,90 @@ public class NetworkConnectivity {
 
     public boolean isWifi() {
         return isWifi;
-	}
+    }
 
-	public boolean checkWifi() {
-		isWifi = false;
-		final ConnectivityManager cm = (ConnectivityManager) context
-				.getSystemService(Context.CONNECTIVITY_SERVICE);
-		final NetworkInfo[] networkInfos = cm.getAllNetworkInfo();
-		for (final NetworkInfo networkInfo : networkInfos) {
-			if (networkInfo.getState() == NetworkInfo.State.CONNECTED) {
-				if (networkInfo.getType() == ConnectivityManager.TYPE_MOBILE) {
-					isWifi = false;
-				}
-				if (networkInfo.getType() == ConnectivityManager.TYPE_WIFI) {
-					isWifi = true;
-				}
-			}
-		}
-		return isWifi;
-	}
+    public boolean checkWifi() {
+        isWifi = false;
+        final ConnectivityManager cm = (ConnectivityManager) context
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
+        final NetworkInfo[] networkInfos = cm.getAllNetworkInfo();
+        for (final NetworkInfo networkInfo : networkInfos) {
+            if (networkInfo.getState() == NetworkInfo.State.CONNECTED) {
+                if (networkInfo.getType() == ConnectivityManager.TYPE_MOBILE) {
+                    isWifi = false;
+                }
+                if (networkInfo.getType() == ConnectivityManager.TYPE_WIFI) {
+                    isWifi = true;
+                }
+            }
+        }
+        return isWifi;
+    }
 
-	/**
+    /**
      * Get current local ip
      *
-	 * @return
-	 */
-	public String getLocalIpAddress() {
-		if (ip == null) {
+     * @return
+     */
+    public String getLocalIpAddress() {
+        if (ip == null) {
             ip = getIp();
         }
         return ip;
     }
 
-	private String getIp() {
-		try {
-			for (final Enumeration<NetworkInterface> en = NetworkInterface
-					.getNetworkInterfaces(); en.hasMoreElements();) {
-				final NetworkInterface intf = en.nextElement();
-				for (final Enumeration<InetAddress> enumIpAddr = intf
-						.getInetAddresses(); enumIpAddr.hasMoreElements();) {
-					final InetAddress inetAddress = enumIpAddr.nextElement();
-					if (!inetAddress.isLoopbackAddress()
-							&& inetAddress instanceof Inet4Address) {
-						return inetAddress.getHostAddress().toString();
-					}
-				}
-			}
-		} catch (final Exception e) {
-		}
-		return "127.0.0.1";
-	}
+    private String getIp() {
+        try {
+            for (final Enumeration<NetworkInterface> en = NetworkInterface
+                    .getNetworkInterfaces(); en.hasMoreElements(); ) {
+                final NetworkInterface intf = en.nextElement();
+                for (final Enumeration<InetAddress> enumIpAddr = intf
+                        .getInetAddresses(); enumIpAddr.hasMoreElements(); ) {
+                    final InetAddress inetAddress = enumIpAddr.nextElement();
+                    if (!inetAddress.isLoopbackAddress()
+                            && inetAddress instanceof Inet4Address) {
+                        return inetAddress.getHostAddress();
+                    }
+                }
+            }
+        } catch (final Exception e) {
+        }
+        return "127.0.0.1";
+    }
 
-	/**
+    /**
      * refresh status base on the networkInfo
      *
-	 * @param networkInfo
-	 */
-	private void refresh(final NetworkInfo networkInfo) {
-		if (networkInfo == null) {
-			cm = (ConnectivityManager) context
-					.getSystemService(Context.CONNECTIVITY_SERVICE);
-			this.networkInfo = cm.getActiveNetworkInfo();
-		} else {
+     * @param networkInfo
+     */
+    private void refresh(final NetworkInfo networkInfo) {
+        if (networkInfo == null) {
+            cm = (ConnectivityManager) context
+                    .getSystemService(Context.CONNECTIVITY_SERVICE);
+            this.networkInfo = cm.getActiveNetworkInfo();
+        } else {
             this.networkInfo = networkInfo;
-		}
-		ip = getIp();
-		checkWifi();
-		notifyNetworkMonitorListeners();
-	}
+        }
+        ip = getIp();
+        checkWifi();
+        notifyNetworkMonitorListeners();
+    }
 
 
     private void start() {
         IntentFilter mNetworkStateChangedFilter = new IntentFilter();
         mNetworkStateChangedFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
-        if (mNetworkStateIntentReceiver!=null) {
+        if (mNetworkStateIntentReceiver != null) {
             stop();
         }
         mNetworkStateIntentReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 if (intent.getAction().equals(ConnectivityManager.CONNECTIVITY_ACTION)) {
-                    final NetworkInfo info = intent.getParcelableExtra(ConnectivityManager.EXTRA_NETWORK_INFO);
-                    networkInfo = cm.getNetworkInfo(info.getType());
+                    if (cm == null) {
+                        return;
+                    }
+                    networkInfo = cm.getActiveNetworkInfo();
                     refresh(networkInfo);
                 }
             }
@@ -209,7 +211,7 @@ public class NetworkConnectivity {
 
     public void stop() {
         context.unregisterReceiver(mNetworkStateIntentReceiver);
-        mNetworkStateIntentReceiver=null;
+        mNetworkStateIntentReceiver = null;
     }
 
 
