@@ -15,6 +15,8 @@
  */
 package com.cocosw.accessory.views;
 
+import android.annotation.SuppressLint;
+import android.content.res.Configuration;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -203,6 +205,16 @@ public class ViewUtils {
         }
     }
 
+    /**
+     * A compat method for Configuration.getLayoutDirection()
+     *
+     * @param config
+     * @return
+     */
+    public static boolean isLayoutRTL(Configuration config) {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 && config.getLayoutDirection() == View.LAYOUT_DIRECTION_RTL;
+    }
+
     public static void scrollToTop(ListView view) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO)
             view.smoothScrollToPosition(0);
@@ -210,8 +222,16 @@ public class ViewUtils {
     }
 
     public static void scrollToEnd(ListView view) {
+        if (view == null || view.getAdapter() == null)
+            return;
         int n = view.getAdapter().getCount();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO)
+            view.smoothScrollToPosition(n);
+        else view.setSelection(n);
     }
 
-
+    @SuppressLint("NewApi")
+    public static boolean isLayoutRtl(View view) {
+        return (Build.VERSION.SDK_INT >= 17) && (view.getLayoutDirection() == View.LAYOUT_DIRECTION_RTL);
+    }
 }

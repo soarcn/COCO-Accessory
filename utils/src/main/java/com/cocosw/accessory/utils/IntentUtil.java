@@ -15,7 +15,10 @@ import android.os.Parcelable;
 import android.provider.Contacts;
 import android.provider.MediaStore;
 import android.provider.Settings;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.text.TextUtils;
+import android.view.View;
 
 import java.io.File;
 import java.net.URL;
@@ -189,7 +192,6 @@ public class IntentUtil {
         shareIntent.putExtra(Intent.EXTRA_SUBJECT, title);
         shareIntent.putExtra(Intent.EXTRA_TEXT, content);// 文本内容
         return shareIntent;
-
     }
 
     /**
@@ -206,7 +208,8 @@ public class IntentUtil {
             try {
                 context.startActivity(intent);
             } catch (ActivityNotFoundException e) {
-                // Acitivity Not Found
+                return false;
+            } catch (SecurityException e) {
                 return false;
             }
             return true;
@@ -214,6 +217,45 @@ public class IntentUtil {
             return false;
         }
     }
+
+    public static boolean startActivity(Activity activity, Intent intent, View v) {
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        try {
+            boolean useLaunchAnimation = (v != null && v.getMeasuredHeight() > 0);
+            if (useLaunchAnimation) {
+                ActivityOptionsCompat opts = ActivityOptionsCompat.makeScaleUpAnimation(v, 0, 0,
+                        v.getMeasuredWidth(), v.getMeasuredHeight());
+                ActivityCompat.startActivity(activity, intent, opts.toBundle());
+            } else {
+                activity.startActivity(intent);
+            }
+            return true;
+        } catch (ActivityNotFoundException e) {
+            return false;
+        } catch (SecurityException e) {
+            return false;
+        }
+    }
+
+    public static boolean startActivityForResult(Activity activity, Intent intent, int requestCode, View v) {
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        try {
+            boolean useLaunchAnimation = (v != null && v.getMeasuredHeight() > 0);
+            if (useLaunchAnimation) {
+                ActivityOptionsCompat opts = ActivityOptionsCompat.makeScaleUpAnimation(v, 0, 0,
+                        v.getMeasuredWidth(), v.getMeasuredHeight());
+                ActivityCompat.startActivityForResult(activity, intent, requestCode, opts.toBundle());
+            } else {
+                activity.startActivity(intent);
+            }
+            return true;
+        } catch (ActivityNotFoundException e) {
+            return false;
+        } catch (SecurityException e) {
+            return false;
+        }
+    }
+
 
     /**
      * Launch a App by packageName&className

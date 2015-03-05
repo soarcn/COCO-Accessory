@@ -75,6 +75,14 @@ public class WebView extends android.webkit.WebView {
     }
 
     /**
+     * Whether long enough to have vertical scrollbar
+     * @return
+     */
+    public boolean existVerticalScrollbar() {
+        return computeVerticalScrollRange() > computeVerticalScrollExtent();
+    }
+
+    /**
      * @param context
      */
     public WebView(final Context context) {
