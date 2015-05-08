@@ -29,12 +29,12 @@ public class DateUtils {
         return str;
     }
 
-    public static String getDateStr(final String dateStr) {
+    public static CharSequence getDateStr(final String dateStr) {
         final Date date = DateUtils.str2Date(dateStr);
         return DateUtils.getRelativeDate(date);
     }
 
-    public static String getDateStr(final Long l) {
+    public static CharSequence getDateStr(final Long l) {
         final Date date = DateUtils.long2Date(l);
         return DateUtils.getRelativeDate(date);
     }
@@ -57,11 +57,12 @@ public class DateUtils {
         return new Date(dateStr).getTime();
     }
 
-    public static String getRelativeDate(final Date date) {
-        final long now = System.currentTimeMillis();
-        return android.text.format.DateUtils.getRelativeTimeSpanString(
-                date.getTime(), now,
-                android.text.format.DateUtils.MINUTE_IN_MILLIS).toString();
+
+    public static CharSequence getRelativeDate(final Date date) {
+        long diff = System.currentTimeMillis() - date.getTime();
+        if (System.currentTimeMillis() - date.getTime() >= android.text.format.DateUtils.WEEK_IN_MILLIS) {
+            return diff / android.text.format.DateUtils.DAY_IN_MILLIS + " days ago";
+        } else return android.text.format.DateUtils.getRelativeTimeSpanString(date.getTime());
     }
 
     /**

@@ -86,7 +86,7 @@ public class StyledText extends SpannableStringBuilder {
      */
     public StyledText bold(@StringRes int textRes) {
         checkContext();
-        return append(context.getText(textRes));
+        return bold(context.getText(textRes));
     }
 
     /**

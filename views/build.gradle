@@ -3,7 +3,7 @@ apply from: 'https://raw.githubusercontent.com/soarcn/gradle/master/maven_push.g
 
 
 dependencies {
-    compile 'com.android.support:support-v4:21.0.3'
+    compile 'com.android.support:support-v4:22.1.1'
     compile 'com.nineoldandroids:library:2.4.0'
 }
 
