@@ -4,7 +4,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:1.0.1'
+        classpath 'com.android.tools.build:gradle:1.2.3'
     }
 }
 
@@ -13,9 +13,7 @@ allprojects {
     version = POM_VERSION
 
     repositories {
-        mavenLocal()
         mavenCentral()
-        maven { url "http://oss.sonatype.org/content/repositories/snapshots/" }
     }
 
     tasks.withType(JavaCompile) {

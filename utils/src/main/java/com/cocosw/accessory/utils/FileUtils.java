@@ -242,7 +242,6 @@ public class FileUtils {
             try {
                 FileUtils.line = read.readLine();
             } catch (final IOException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
         } catch (final Exception e) {
@@ -260,14 +259,12 @@ public class FileUtils {
             mm = new RandomAccessFile(FileUtils.filename, "rw");
             mm.writeUTF(body);
         } catch (final IOException e1) {
-            // TODO 自动生成 catch 块
             e1.printStackTrace();
         } finally {
             if (mm != null) {
                 try {
                     mm.close();
                 } catch (final IOException e2) {
-                    // TODO 自动生成 catch 块
                     e2.printStackTrace();
                 }
             }
@@ -288,14 +285,12 @@ public class FileUtils {
             oos.writeObject(obj);
             oos.flush();
         } catch (final IOException e1) {
-            // TODO 自动生成 catch 块
             e1.printStackTrace();
         } finally {
             if (oos != null) {
                 try {
                     oos.close();
                 } catch (final IOException e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
             }
@@ -322,17 +317,17 @@ public class FileUtils {
         }
     }
 
-    public static void backupdb(final Context ctx) {
+    public static void backupdb(final Context ctx,String dbName,String backupName) {
         try {
-            final File file = ctx.getDatabasePath("coco.db");
+            final File file = ctx.getDatabasePath(dbName);
 
             final File exportDir = new File(
-                    Environment.getExternalStorageDirectory(), "coco");
+                    Environment.getExternalStorageDirectory(), "backup");
             if (!exportDir.exists()) {
                 exportDir.mkdirs();
             }
 
-            final File backup = new File(exportDir, "coco.db");
+            final File backup = new File(exportDir, backupName);
             if (backup.exists()) {
                 backup.delete();
             }
@@ -344,17 +339,17 @@ public class FileUtils {
         }
     }
 
-    public static void restoredb(final Context context) {
+    public static void restoredb(final Context context,String dbName,String backupName) {
         try {
-            File file = context.getDatabasePath("coco.db");
+            File file = context.getDatabasePath(dbName);
             if (file.exists()) {
                 file.delete();
             }
-            file = context.getDatabasePath("coco.db");
+            file = context.getDatabasePath(dbName);
 
             final File exportDir = new File(
-                    Environment.getExternalStorageDirectory(), "coco");
-            final File backup = new File(exportDir, "coco.db");
+                    Environment.getExternalStorageDirectory(), "backup");
+            final File backup = new File(exportDir, backupName);
 
             FileUtils.fileCopy(backup, file);
 
@@ -366,14 +361,12 @@ public class FileUtils {
 
     private static void fileCopy(final File dbFile, final File backup)
             throws IOException {
-        // TODO Auto-generated method stub
         final FileChannel inChannel = new FileInputStream(dbFile).getChannel();
         final FileChannel outChannel = new FileOutputStream(backup)
                 .getChannel();
         try {
             inChannel.transferTo(0, inChannel.size(), outChannel);
         } catch (final IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         } finally {
             if (inChannel != null) {
