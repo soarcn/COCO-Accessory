@@ -168,6 +168,21 @@ public class ViewUtils {
     }
 
     /**
+     * Show soft input method manager
+     *
+     * @param view
+     * @return view
+     */
+    public static View showSoftInput(View view) {
+        InputMethodManager manager = (InputMethodManager) view.getContext()
+                .getSystemService(INPUT_METHOD_SERVICE);
+        if (manager != null)
+            manager.showSoftInput(view, 0);
+        return view;
+    }
+
+
+    /**
      * Compat version of removeGlobalOnLayoutListener
      *
      * @param view
