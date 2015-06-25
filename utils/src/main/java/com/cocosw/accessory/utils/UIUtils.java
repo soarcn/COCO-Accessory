@@ -250,7 +250,7 @@ public class UIUtils {
     }
 
     @TargetApi(11)
-    public static class SDK11 {
+    private static class SDK11 {
 
         public static void disableHardwareAcceleration(final View view) {
             view.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
