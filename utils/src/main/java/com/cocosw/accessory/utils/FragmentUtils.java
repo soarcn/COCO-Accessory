@@ -11,10 +11,9 @@ public class FragmentUtils {
         final FragmentTransaction ft = act.getSupportFragmentManager()
                 .beginTransaction();
         ft.replace(id, newFragment);
-        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         try {
             ft.addToBackStack(null).commit();
-        } catch (final Exception e) {
+        } catch (final Exception ignored) {
         }
 
     }
@@ -23,10 +22,9 @@ public class FragmentUtils {
                                        final int id, final Fragment newFragment) {
         final FragmentTransaction ft = act.getSupportFragmentManager()
                 .beginTransaction();
-        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         try {
             ft.replace(id, newFragment).commit();
-        } catch (final Exception e) {
+        } catch (final Exception ignored) {
         }
 
     }

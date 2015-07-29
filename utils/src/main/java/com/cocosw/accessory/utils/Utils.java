@@ -4,8 +4,6 @@ import android.app.ActivityManager;
 import android.app.ActivityManager.RunningAppProcessInfo;
 import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.Bitmap.CompressFormat;
 import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
@@ -14,9 +12,6 @@ import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -30,30 +25,6 @@ import java.util.List;
 import java.util.Map;
 
 public class Utils {
-
-    public static void printCallStatck() {
-        final Throwable ex = new Throwable();
-        // StackTraceElement[] stackElements = ex.getStackTrace();
-        ex.printStackTrace();
-    }
-
-
-    /**
-     * 将Bitmap转成文件放在程序文件目录下
-     */
-    public static void Bitmap2File(final Bitmap bitmap, final String fileName,
-                                   final Context ctx) {
-
-        try {
-            final FileOutputStream fos = ctx.openFileOutput(fileName,
-                    android.content.Context.MODE_WORLD_READABLE);
-            bitmap.compress(CompressFormat.JPEG, 80, fos);
-            fos.flush();
-            fos.close();
-        } catch (final FileNotFoundException e) {
-        } catch (final IOException e) {
-        }
-    }
 
     public static String appendSql(final String[] columns, String sql) {
 
