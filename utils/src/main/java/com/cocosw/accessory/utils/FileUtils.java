@@ -10,6 +10,8 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.os.EnvironmentCompat;
 import android.util.Log;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -17,13 +19,20 @@ import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.io.RandomAccessFile;
+import java.io.UnsupportedEncodingException;
 import java.nio.channels.FileChannel;
 import java.text.DecimalFormat;
+import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipException;
+import java.util.zip.ZipFile;
 
 public class FileUtils {
     private static final String TAG = "FileUtils";
@@ -317,7 +326,7 @@ public class FileUtils {
         }
     }
 
-    public static void backupdb(final Context ctx,String dbName,String backupName) {
+    public static void backupdb(final Context ctx, String dbName, String backupName) {
         try {
             final File file = ctx.getDatabasePath(dbName);
 
@@ -339,7 +348,7 @@ public class FileUtils {
         }
     }
 
-    public static void restoredb(final Context context,String dbName,String backupName) {
+    public static void restoredb(final Context context, String dbName, String backupName) {
         try {
             File file = context.getDatabasePath(dbName);
             if (file.exists()) {
@@ -359,7 +368,7 @@ public class FileUtils {
 
     }
 
-    private static void fileCopy(final File dbFile, final File backup)
+    public static void fileCopy(final File dbFile, final File backup)
             throws IOException {
         final FileChannel inChannel = new FileInputStream(dbFile).getChannel();
         final FileChannel outChannel = new FileOutputStream(backup)
@@ -677,4 +686,83 @@ public class FileUtils {
         deleteRecursively(fileOrDirectory, null);
     }
 
+    /**
+     * Unzip zipFile to folderPath
+     *
+     * @throws Exception
+     */
+    public int upZipFile(File zipFile, String folderPath) throws ZipException, IOException {
+        //public static void upZipFile() throws Exception{
+        ZipFile zfile = new ZipFile(zipFile);
+        Enumeration zList = zfile.entries();
+        ZipEntry ze = null;
+        byte[] buf = new byte[1024];
+        while (zList.hasMoreElements()) {
+            ze = (ZipEntry) zList.nextElement();
+            if (ze.isDirectory()) {
+                Log.d("upZipFile", "ze.getName() = " + ze.getName());
+                String dirstr = folderPath + ze.getName();
+                //dirstr.trim();
+                dirstr = new String(dirstr.getBytes("8859_1"), "GB2312");
+                Log.d("upZipFile", "str = " + dirstr);
+                File f = new File(dirstr);
+                f.mkdir();
+                continue;
+            }
+            Log.d("upZipFile", "ze.getName() = " + ze.getName());
+            OutputStream os = new BufferedOutputStream(new FileOutputStream(getRealFileName(folderPath, ze.getName())));
+            InputStream is = new BufferedInputStream(zfile.getInputStream(ze));
+            int readLen = 0;
+            while ((readLen = is.read(buf, 0, 1024)) != -1) {
+                os.write(buf, 0, readLen);
+            }
+            is.close();
+            os.close();
+        }
+        zfile.close();
+        return 0;
+    }
+
+    /**
+     * zip absFileName from baseDir
+     *
+     * @param baseDir     指定根目录
+     * @param absFileName 相对路径名，来自于ZipEntry中的name
+     * @return java.io.File 实际的文件
+     */
+    public static File getRealFileName(String baseDir, String absFileName) {
+        String[] dirs = absFileName.split("/");
+        File ret = new File(baseDir);
+        String substr = null;
+        if (dirs.length > 1) {
+            for (int i = 0; i < dirs.length - 1; i++) {
+                substr = dirs[i];
+                try {
+                    //substr.trim();
+                    substr = new String(substr.getBytes("8859_1"), "GB2312");
+
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+                ret = new File(ret, substr);
+
+            }
+            Log.d("upZipFile", "1ret = " + ret);
+            if (!ret.exists())
+                ret.mkdirs();
+            substr = dirs[dirs.length - 1];
+            try {
+                //substr.trim();
+                substr = new String(substr.getBytes("8859_1"), "GB2312");
+                Log.d("upZipFile", "substr = " + substr);
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+
+            ret = new File(ret, substr);
+            Log.d("upZipFile", "2ret = " + ret);
+            return ret;
+        }
+        return ret;
+    }
 }
