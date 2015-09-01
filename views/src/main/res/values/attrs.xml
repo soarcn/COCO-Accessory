@@ -46,7 +46,7 @@
         <attr name="android:textColor" />
     </declare-styleable>
     <declare-styleable name="ExpandingTextView">
-        <attr name="expanded" format="boolean|reference" />
+        <attr name="et_expanded" format="boolean|reference" />
         <attr name="collapsed_maxLines" format="integer|reference" />
     </declare-styleable>
 

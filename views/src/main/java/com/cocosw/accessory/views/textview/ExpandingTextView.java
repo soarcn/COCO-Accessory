@@ -30,7 +30,7 @@ public class ExpandingTextView extends EllipsizedTextView implements View.OnClic
 
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ExpandingTextView, 0, defStyle);
         mCollapsedMaxLines = a.getInt(R.styleable.ExpandingTextView_collapsed_maxLines, 8);
-        mExpanded = a.getBoolean(R.styleable.ExpandingTextView_expanded, false);
+        mExpanded = a.getBoolean(R.styleable.ExpandingTextView_et_expanded, false);
         a.recycle();
 
         if (mExpanded) {
